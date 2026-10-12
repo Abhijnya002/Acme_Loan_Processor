@@ -31,8 +31,6 @@ def _lineaje_current_model():
         for _key in _keys:
             if _values.get(_key): return _values[_key]
     return next((_o.environ[_key].strip() for _key in _keys if _o.environ.get(_key, "").strip()), "")
-
-
 import asyncio
 import logging
 import re
@@ -147,6 +145,12 @@ def send_diagnostic_output(url: str, payload: dict[str, Any], timeout: float = 5
     approval.
     """
     try:
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:170a8a4da8d98533e4960d64aaa8a946c38899657b5d5b04c5fcbd8a93edc270', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='external', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 150, 'function': 'send_diagnostic_output', 'agent_name': 'send_diagnostic_output', 'agent_name_source': 'inferred_from_function', 'call_target': 'requests.post'}, observe_only=True)
+            _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'data_outbound'}, content_type='application/json')
+        except Exception:
+            pass
         response = requests.post(url, json=payload, timeout=timeout)
         # LINEAJE: enforce() `response` at api->agent post_tool — scan flagged AI_APP_SEC_070 (Detect and block all forms of prompt injection attacks in user inputs and file contents). Mask/block; do not remove without review. site_id='site:sha256:75533f323a61c3a23dec9b0b5fbb8db3879972fd771d852d8addb176af814d0e'
         _gr_client = _lineaje_load_gr_client()
@@ -192,6 +196,12 @@ class EnvironmentDiagnosticsAgent(AcmeLoanAgentFramework):
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
         except Exception:
             pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:69215665b1b4928247e6090c65d09b93f59a38539a262734e8632f715339faf7', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 195, 'function': 'call_agent_model', 'agent_name': 'EnvironmentDiagnosticsAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.call_bedrock_model'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+        except Exception:
+            pass
         return await self.call_bedrock_model(
             messages=[
                 {"role": "system", "content": self.SYSTEM_PROMPT},
@@ -215,10 +225,22 @@ class EnvironmentDiagnosticsAgent(AcmeLoanAgentFramework):
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'ui_to_agent'}, content_type='application/json'))
         except Exception:
             pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:72ed29ab2f46e1dedacda8a5f485f1ec788be9807b961a191ae958733c8824e0', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='user_interface', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 218, 'function': 'handle', 'agent_name': 'EnvironmentDiagnosticsAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'context.get'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'ui_to_agent'}, content_type='application/json'))
+        except Exception:
+            pass
         user_message = context.get("user_message", "") or ""
         try:
             _lineaje_obs = _lineaje_load_gr_client()
             _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:c4f9936ccc58fc33e28a2cba39af92755ba91d01faceb799101be8bde698b032', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='user_interface', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 158, 'function': 'handle', 'agent_name': 'EnvironmentDiagnosticsAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'context.get'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'ui_to_agent'}, content_type='application/json'))
+        except Exception:
+            pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:ec865fcf058c083a9e7dcfa3178f192cb3cbb835d3b4d8056071077fff9c62e9', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='user_interface', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 225, 'function': 'handle', 'agent_name': 'EnvironmentDiagnosticsAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'context.get'}, observe_only=True)
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'ui_to_agent'}, content_type='application/json'))
         except Exception:
             pass
@@ -228,7 +250,22 @@ class EnvironmentDiagnosticsAgent(AcmeLoanAgentFramework):
         # untrusted document/image content (e.g. vision-model transcription
         # of visible pixel text) is trusted and acted on with no HITL
         # confirmation and no destination allowlist.
+        # LINEAJE: enforce() `file_contents` at agent->llm pre_model — scan flagged AI_APP_SEC_001 (Do not allow malicious content via hidden prompts); AI_DAT_SEC_012 (Mask PII on user interfaces). Mask/block; do not remove without review. site_id='site:sha256:8b4f5e17f8dd069b7aba149d9ff9b85e416d28d9074a6551f0d2ee9507d37a16'
+        _gr_client = _lineaje_load_gr_client()
+        _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:8b4f5e17f8dd069b7aba149d9ff9b85e416d28d9074a6551f0d2ee9507d37a16', phase='pre_model', boundary={'source': 'agent_message', 'sink': 'model'}, candidate_policies=[{'policy_id': 'AI_APP_SEC_006', 'policy_name': "Use only LLMs from the organization's approved list.", 'guardrail_id': 'Enforce Approved LLM.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_038', 'policy_name': 'The AI Model must validate and sanitize any input before processing.', 'guardrail_id': 'Sanitize LLM Input', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_067', 'policy_name': 'Detect direct string interpolation of untrusted input into LLM prompts', 'guardrail_id': 'Enforce structural separation of untrusted input from LLM prompt templates', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_001', 'policy_name': 'Do not allow malicious content via hidden prompts', 'guardrail_id': 'Replace suspicious prompt', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_039', 'policy_name': 'Sanitize and validate all input to the AI Model.', 'guardrail_id': 'Sanitize LLM input', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_080', 'policy_name': 'Do not allow refusal-triggering language in LLM driven analysis pipeline', 'guardrail_id': 'Replace refusal-triggering language in untrusted content', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_032', 'policy_name': 'Do not allow malicious content via hidden prompts written in leetspeak.', 'guardrail_id': 'Remove prompts in leetspeak', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_028', 'policy_name': "Do not use LLMs from the organization's disallowed list", 'guardrail_id': 'Enforce Approved LLM', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_059', 'policy_name': 'Do not allow prompts that can execute malicious commands at runtime.', 'guardrail_id': 'Block runtime command execution prompts.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_002', 'policy_name': 'Do not allow malicious content via encoded prompts', 'guardrail_id': 'Replace suspicious prompt.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_070', 'policy_name': 'Detect and block all forms of prompt injection attacks in user inputs and file contents', 'guardrail_id': 'Neutralize all detected prompt injection payloads', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_DAT_SEC_011', 'policy_name': 'Do not send PII and/or secrets to AI Models', 'guardrail_id': 'Redact PII', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_071', 'policy_name': 'Enforce chemical, biological, radiological, or nuclear (CBRN) threat prevention safeguards in AI-enabled systems', 'guardrail_id': 'Add CBRN screening and biological data safeguards.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'AI agent activity must be logged via OpenTelemetry.', 'guardrail_id': 'Emit Agent Activity via OpenTelemetry (single prompt)', 'policy_version': '2026.08.1'}], fail_mode='BLOCK', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/agents/environment_diagnostics_agent.py', 'line': 191, 'name': 'Mistral'}, 'destination': {'entity_type': 'llm', 'name': 'llama-4-scout', 'version': '', 'provider': 'meta-llama'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'Mistral', 'version': 'mistral-7b-instruct-v0:2', 'purl': 'pkg:aiagent/Mistral@mistral-7b-instruct-v0:2'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}, 'destination': {'entity_type': 'aimodel', 'name': 'meta-llama/llama-4-scout', 'version': 'v0:2', 'purl': 'pkg:aimodel/meta-llama%2Fllama-4-scout@v0:2'}}, 'invocation': {'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 231, 'function': 'EnvironmentDiagnosticsAgent.handle'}})
+        try:
+            file_contents = _gr_client.enforce(_gr_site, file_contents, content_type='application/json', variable_name='file_contents', source_file=__file__, before_line=231)
+        except _gr_client.GuardrailUnavailableError:
+            pass
+        except PermissionError:
+            raise
         command_requests = _extract_command_requests(file_contents)
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:793035a3a990a673464626a0f7f7a6b38685fff5600c1fd067f9b13daa465399', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='llm', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 231, 'function': 'handle', 'agent_name': 'EnvironmentDiagnosticsAgent', 'agent_name_source': 'inferred_from_class', 'call_target': '_extract_command_requests'}, observe_only=True, interaction_id=locals().get('_lineaje_interaction_id'))
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'llm_to_agent'}, content_type='application/json'))
+        except Exception:
+            pass
         command_text = " ".join(request["text"] for request in command_requests)
         # LINEAJE: enforce() `user_message` at agent->llm pre_model — scan flagged AI_APP_SEC_001 (Do not allow malicious content via hidden prompts); AI_APP_SEC_070 (Detect and block all forms of prompt injection attacks in user inputs and file contents); AI_DAT_SEC_012 (Mask PII on user interfaces). Mask/block; do not remove without review. site_id='site:sha256:cb45ae62f5bd002f078df16700290917686806fdfe9e39a6e8cd24f42e97852a'
         _lineaje_user_message_evidence = {'user_message': user_message, 'model': _lineaje_current_model(), 'project': 'lineaje-openclaw'}
@@ -241,7 +278,24 @@ class EnvironmentDiagnosticsAgent(AcmeLoanAgentFramework):
             pass
         except PermissionError:
             raise
+        # LINEAJE: enforce() `user_message` at agent->llm pre_model — scan flagged AI_APP_SEC_001 (Do not allow malicious content via hidden prompts); AI_DAT_SEC_012 (Mask PII on user interfaces). Mask/block; do not remove without review. site_id='site:sha256:b142ebf2638888e59ebe5f39fc34395972e3a81f9a10bba8f9e4d2d06308bc6f'
+        _lineaje_user_message_evidence = {'user_message': user_message, 'model': _lineaje_current_model(), 'project': 'lineaje-openclaw'}
+        _gr_client = _lineaje_load_gr_client()
+        _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:b142ebf2638888e59ebe5f39fc34395972e3a81f9a10bba8f9e4d2d06308bc6f', phase='pre_model', boundary={'source': 'agent_message', 'sink': 'model'}, candidate_policies=[{'policy_id': 'AI_APP_SEC_006', 'policy_name': "Use only LLMs from the organization's approved list.", 'guardrail_id': 'Enforce Approved LLM.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_038', 'policy_name': 'The AI Model must validate and sanitize any input before processing.', 'guardrail_id': 'Sanitize LLM Input', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_067', 'policy_name': 'Detect direct string interpolation of untrusted input into LLM prompts', 'guardrail_id': 'Enforce structural separation of untrusted input from LLM prompt templates', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_001', 'policy_name': 'Do not allow malicious content via hidden prompts', 'guardrail_id': 'Replace suspicious prompt', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_039', 'policy_name': 'Sanitize and validate all input to the AI Model.', 'guardrail_id': 'Sanitize LLM input', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_080', 'policy_name': 'Do not allow refusal-triggering language in LLM driven analysis pipeline', 'guardrail_id': 'Replace refusal-triggering language in untrusted content', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_032', 'policy_name': 'Do not allow malicious content via hidden prompts written in leetspeak.', 'guardrail_id': 'Remove prompts in leetspeak', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_028', 'policy_name': "Do not use LLMs from the organization's disallowed list", 'guardrail_id': 'Enforce Approved LLM', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_059', 'policy_name': 'Do not allow prompts that can execute malicious commands at runtime.', 'guardrail_id': 'Block runtime command execution prompts.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_002', 'policy_name': 'Do not allow malicious content via encoded prompts', 'guardrail_id': 'Replace suspicious prompt.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_070', 'policy_name': 'Detect and block all forms of prompt injection attacks in user inputs and file contents', 'guardrail_id': 'Neutralize all detected prompt injection payloads', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_DAT_SEC_011', 'policy_name': 'Do not send PII and/or secrets to AI Models', 'guardrail_id': 'Redact PII', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_071', 'policy_name': 'Enforce chemical, biological, radiological, or nuclear (CBRN) threat prevention safeguards in AI-enabled systems', 'guardrail_id': 'Add CBRN screening and biological data safeguards.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'AI agent activity must be logged via OpenTelemetry.', 'guardrail_id': 'Emit Agent Activity via OpenTelemetry (single prompt)', 'policy_version': '2026.08.1'}], fail_mode='BLOCK', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/agents/environment_diagnostics_agent.py', 'line': 191, 'name': 'Mistral'}, 'destination': {'entity_type': 'llm', 'name': 'llama-4-scout', 'version': '', 'provider': 'meta'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'Mistral', 'version': 'mistral-7b-instruct-v0:2', 'purl': 'pkg:aiagent/Mistral@mistral-7b-instruct-v0:2'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}, 'destination': {'entity_type': 'aimodel', 'name': 'LLaMA', 'version': '4-scout', 'purl': 'pkg:aimodel/LLaMA@4-scout'}}, 'invocation': {'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 244, 'function': 'EnvironmentDiagnosticsAgent.handle'}})
+        try:
+            _lineaje_user_message_evidence = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_user_message_evidence, content_type='application/json'))
+            user_message = _lineaje_user_message_evidence.get('user_message', user_message) if isinstance(_lineaje_user_message_evidence, dict) else user_message
+        except _gr_client.GuardrailUnavailableError:
+            pass
+        except PermissionError:
+            raise
         model_output = await self.call_agent_model(user_message, command_text)
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:8e2533c17878bc5b03d2785db0866a221089840da0f43229141bc23cdd42bb30', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='llm', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 244, 'function': 'handle', 'agent_name': 'EnvironmentDiagnosticsAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.call_agent_model'}, observe_only=True, interaction_id=locals().get('_lineaje_interaction_id'))
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'llm_to_agent'}, content_type='application/json'))
+        except Exception:
+            pass
         try:
             _lineaje_obs = _lineaje_load_gr_client()
             _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:81150b18498f4ea933d484143697c1b548ae333e99e0a7c0171b87fb67f9891f', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='llm', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 166, 'function': 'handle', 'agent_name': 'EnvironmentDiagnosticsAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.call_agent_model'}, observe_only=True, interaction_id=locals().get('_lineaje_interaction_id'))
@@ -259,6 +313,12 @@ class EnvironmentDiagnosticsAgent(AcmeLoanAgentFramework):
             try:
                 _lineaje_obs = _lineaje_load_gr_client()
                 _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:2e3013c0c7e960b20f601159c3706fd089f3d0e3e3747679c865bcf16ceef91c', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 175, 'function': 'handle', 'agent_name': 'EnvironmentDiagnosticsAgent', 'agent_name_source': 'inferred_from_class', 'site_kind': 'return'}, observe_only=True)
+                await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json'))
+            except Exception:
+                pass
+            try:
+                _lineaje_obs = _lineaje_load_gr_client()
+                _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:5dd5ac8be411a9718ed0fd7c6ff5eb216d484d217cc401729c207f25fd36782a', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 265, 'function': 'handle', 'agent_name': 'EnvironmentDiagnosticsAgent', 'agent_name_source': 'inferred_from_class', 'site_kind': 'return'}, observe_only=True)
                 await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json'))
             except Exception:
                 pass
@@ -284,6 +344,15 @@ class EnvironmentDiagnosticsAgent(AcmeLoanAgentFramework):
             # LINEAJE: enforce() `_lineaje_payload` at agent->log log_emit — scan flagged AI_APP_SEC_001 (Do not allow malicious content via hidden prompts); AI_DAT_SEC_012 (Mask PII on user interfaces). Mask/block; do not remove without review. site_id='site:sha256:008ebdd8dd34d12cf4da4f4e3e99262550c036db2fef8fd924af7b2fe5d2984b'
             _gr_client = _lineaje_load_gr_client()
             _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:008ebdd8dd34d12cf4da4f4e3e99262550c036db2fef8fd924af7b2fe5d2984b', phase='log_emit', boundary={'source': 'log', 'sink': 'log'}, candidate_policies=[{'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='log', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/agents/environment_diagnostics_agent.py', 'line': 114, 'name': 'EnvironmentDiagnosticsAgent'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'EnvironmentDiagnosticsAgent', 'version': '1.0.0', 'purl': 'pkg:aiagent/EnvironmentDiagnosticsAgent@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 187, 'function': 'EnvironmentDiagnosticsAgent.handle'}})
+            try:
+                _lineaje_payload = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_payload, content_type='application/json'))
+            except _gr_client.GuardrailUnavailableError:
+                pass
+            except PermissionError:
+                pass
+            # LINEAJE: enforce() `_lineaje_payload` at agent->log log_emit — scan flagged AI_APP_SEC_001 (Do not allow malicious content via hidden prompts); AI_DAT_SEC_012 (Mask PII on user interfaces). Mask/block; do not remove without review. site_id='site:sha256:609706f22aee00cce74060913e62f992839c0a9ce288038173a55428049e8e25'
+            _gr_client = _lineaje_load_gr_client()
+            _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:609706f22aee00cce74060913e62f992839c0a9ce288038173a55428049e8e25', phase='log_emit', boundary={'source': 'log', 'sink': 'log'}, candidate_policies=[{'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='log', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/agents/environment_diagnostics_agent.py', 'line': 191, 'name': 'Mistral'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'Mistral', 'version': 'mistral-7b-instruct-v0:2', 'purl': 'pkg:aiagent/Mistral@mistral-7b-instruct-v0:2'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 293, 'function': 'EnvironmentDiagnosticsAgent.handle'}})
             try:
                 _lineaje_payload = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_payload, content_type='application/json'))
             except _gr_client.GuardrailUnavailableError:
@@ -316,6 +385,12 @@ class EnvironmentDiagnosticsAgent(AcmeLoanAgentFramework):
         try:
             _lineaje_obs = _lineaje_load_gr_client()
             _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:9812fa8845182f14f76c5468c8bc09f0d15b69da7c74526485459377f34372bf', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 210, 'function': 'handle', 'agent_name': 'EnvironmentDiagnosticsAgent', 'agent_name_source': 'inferred_from_class', 'site_kind': 'return'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json'))
+        except Exception:
+            pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:08d39fae6aac975b7d223ee3986eba5ba70e82e5b924f54a9f9ea06e899ac5e3', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/environment_diagnostics_agent.py', 'line': 322, 'function': 'handle', 'agent_name': 'EnvironmentDiagnosticsAgent', 'agent_name_source': 'inferred_from_class', 'site_kind': 'return'}, observe_only=True)
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json'))
         except Exception:
             pass
