@@ -31,8 +31,6 @@ def _lineaje_current_model():
         for _key in _keys:
             if _values.get(_key): return _values[_key]
     return next((_o.environ[_key].strip() for _key in _keys if _o.environ.get(_key, "").strip()), "")
-
-
 import logging
 import re
 from typing import Any, Optional
@@ -92,6 +90,12 @@ class FileManagementAgent(AcmeLoanAgentFramework):
             pass
         except PermissionError:
             raise
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:a8bc39b34c2626d7c0a49fd58b89cbec50abf1ea1d1e7db53731ea72f86f9982', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/file_management_agent.py', 'line': 95, 'function': 'call_agent_model', 'agent_name': 'FileManagementAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.call_bedrock_model'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+        except Exception:
+            pass
         return await self.call_bedrock_model(
             messages=_lineaje_messages,
             temperature=0.2,
@@ -130,6 +134,12 @@ class FileManagementAgent(AcmeLoanAgentFramework):
             pass
         logger.info("Retrieving file from API: %s", url)
         try:
+            try:
+                _lineaje_obs = _lineaje_load_gr_client()
+                _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:097a6ec41b46d756d3da2eb9573767cb44f693109eac5d666c75e141dfdea691', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='external', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/file_management_agent.py', 'line': 133, 'function': 'get_file_from_api', 'agent_name': 'FileManagementAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'requests.get'}, observe_only=True)
+                _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'data_outbound'}, content_type='application/json')
+            except Exception:
+                pass
             response = requests.get(url, timeout=self.API_TIMEOUT)
             # LINEAJE: enforce() `response` at api->agent post_tool — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:97d884f34d1a5897c7522e54d0960c46344c2dd07c586687ae972046a68ba190'
             _gr_client = _lineaje_load_gr_client()
@@ -213,6 +223,12 @@ class FileManagementAgent(AcmeLoanAgentFramework):
         logger.info("Purging records via API: %s", url)
         try:
             # Vulnerability: purge/destroy-style API call runs without HITL approval.
+            try:
+                _lineaje_obs = _lineaje_load_gr_client()
+                _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:177f60aa44a2d5b204c808de978d881330c5e6d83ead375dd2db31d5efa58533', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='external', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/file_management_agent.py', 'line': 216, 'function': 'purge_records', 'agent_name': 'FileManagementAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'requests.get'}, observe_only=True)
+                _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'data_outbound'}, content_type='application/json')
+            except Exception:
+                pass
             response = requests.get(url, timeout=self.API_TIMEOUT)
             # LINEAJE: enforce() `response` at api->agent post_tool — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:82963963dc79951b133cb20da288372e53003a6f98edc4176e158feabc62637a'
             _gr_client = _lineaje_load_gr_client()
@@ -262,6 +278,12 @@ class FileManagementAgent(AcmeLoanAgentFramework):
         logger.info("destroy_temp_artifacts('%s') executed without HITL approval", filename)
 
     async def handle(self, context: dict[str, Any]) -> dict[str, Any]:
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:e35886286f7e77a2e867fa411fc964ceecaddb5c6a05df9c096aad5f2cbe53a5', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='user_interface', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/file_management_agent.py', 'line': 265, 'function': 'handle', 'agent_name': 'FileManagementAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'context.get'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'ui_to_agent'}, content_type='application/json'))
+        except Exception:
+            pass
         user_message = context.get("user_message", "")
         filename = self._extract_filename(user_message)
         record_id = self._extract_record_id(user_message)
@@ -329,6 +351,12 @@ class FileManagementAgent(AcmeLoanAgentFramework):
         try:
             _lineaje_obs = _lineaje_load_gr_client()
             _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:0c7729fd1c4e3c6d3591ab39e93c266f15cdd1e618224cc8c2474b3ee5e2c800', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/file_management_agent.py', 'line': 158, 'function': 'handle', 'agent_name': 'FileManagementAgent', 'agent_name_source': 'inferred_from_class', 'site_kind': 'return'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json'))
+        except Exception:
+            pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:815caa0c98182be451c313cc2983fdf94d6a79ee4efb344f4cc61f167ba17937', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/file_management_agent.py', 'line': 335, 'function': 'handle', 'agent_name': 'FileManagementAgent', 'agent_name_source': 'inferred_from_class', 'site_kind': 'return'}, observe_only=True)
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json'))
         except Exception:
             pass
