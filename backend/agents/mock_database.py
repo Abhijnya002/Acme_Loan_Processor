@@ -31,8 +31,6 @@ def _lineaje_current_model():
         for _key in _keys:
             if _values.get(_key): return _values[_key]
     return next((_o.environ[_key].strip() for _key in _keys if _o.environ.get(_key, "").strip()), "")
-
-
 import base64
 from copy import deepcopy
 from typing import Any
@@ -170,6 +168,12 @@ def search_borrower_records(query: str) -> list[dict[str, Any]]:
     _gr_client = _lineaje_load_gr_client()
     _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:7638100b84b266e1d4c82aa4a5b6f74b770715424fa17419c351ddaf00f8a2df', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/mock_database.py', 'line': 136, 'function': 'search_borrower_records'}})
     try:
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:27c901a08d03306e7543ba4510e9f59a921267eb58b8868af8082d76992dfcfe', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/mock_database.py', 'line': 173, 'function': 'search_borrower_records', 'agent_name': 'search_borrower_records', 'agent_name_source': 'inferred_from_function', 'call_target': '_gr_client.enforce'}, observe_only=True)
+            _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json')
+        except Exception:
+            pass
         matches = _gr_client.enforce(_gr_site, matches, content_type='text/plain')
     except _gr_client.GuardrailUnavailableError:
         pass
@@ -187,6 +191,12 @@ def ensure_credit_score(record: dict[str, Any]) -> dict[str, Any]:
     _gr_client = _lineaje_load_gr_client()
     _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:2a6fd2fb717619ec222c70d20793f5fdc16c05dc0634284757df58ba7a22e40e', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/mock_database.py', 'line': 144, 'function': 'ensure_credit_score'}})
     try:
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:b93ecd7308fbc6d00512736c59a23c3e8915fcb51e3fbd1d2c051c71ba5df75c', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/mock_database.py', 'line': 190, 'function': 'ensure_credit_score', 'agent_name': 'ensure_credit_score', 'agent_name_source': 'inferred_from_function', 'call_target': '_gr_client.enforce'}, observe_only=True)
+            _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json')
+        except Exception:
+            pass
         borrower = _gr_client.enforce(_gr_site, borrower, content_type='text/plain')
     except _gr_client.GuardrailUnavailableError:
         pass
@@ -223,6 +233,12 @@ def search_support_cases(query: str) -> list[dict[str, Any]]:
     _gr_client = _lineaje_load_gr_client()
     _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:155e137f5d4f68efe2067677d1eea61a5fd180e16790d231c1a122988bcc84b4', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/mock_database.py', 'line': 171, 'function': 'search_support_cases'}})
     try:
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:00f632d4fe3dd6f1c63d92b3a8295e5e9b3ce96ebf7c12aefd002d9c9ab12ab3', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/mock_database.py', 'line': 226, 'function': 'search_support_cases', 'agent_name': 'search_support_cases', 'agent_name_source': 'inferred_from_function', 'call_target': '_gr_client.enforce'}, observe_only=True)
+            _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json')
+        except Exception:
+            pass
         matches = _gr_client.enforce(_gr_site, matches, content_type='text/plain')
     except _gr_client.GuardrailUnavailableError:
         pass
@@ -239,6 +255,12 @@ def lookup_loan_document(query: str) -> dict[str, Any]:
             _gr_client = _lineaje_load_gr_client()
             _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:6601948613c85026b6b8c50f7da80d6609872d9495d033c98a74cf44863c95fa', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/mock_database.py', 'line': 178, 'function': 'lookup_loan_document'}})
             try:
+                try:
+                    _lineaje_obs = _lineaje_load_gr_client()
+                    _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:97fecdf7cccf890a55fdba24f0c276901ec31a3af487600ce6f5ab0c9e93a07a', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/mock_database.py', 'line': 242, 'function': 'lookup_loan_document', 'agent_name': 'lookup_loan_document', 'agent_name_source': 'inferred_from_function', 'call_target': '_gr_client.enforce'}, observe_only=True)
+                    _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json')
+                except Exception:
+                    pass
                 record = _gr_client.enforce(_gr_site, record, content_type='text/plain')
             except _gr_client.GuardrailUnavailableError:
                 pass
@@ -251,6 +273,12 @@ def lookup_loan_document(query: str) -> dict[str, Any]:
     _gr_client = _lineaje_load_gr_client()
     _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:24680e7f4800b68eed6793453045664a7b288e6320baf3f29c37b318ec78975a', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/mock_database.py', 'line': 180, 'function': 'lookup_loan_document'}})
     try:
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:25f1225fa18193fe1327d93f6c81878de716a8b6218bd0f2f2fd8b648431f6d3', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/mock_database.py', 'line': 254, 'function': 'lookup_loan_document', 'agent_name': 'lookup_loan_document', 'agent_name_source': 'inferred_from_function', 'call_target': '_gr_client.enforce'}, observe_only=True)
+            _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json')
+        except Exception:
+            pass
         _lineaje_payload = _gr_client.enforce(_gr_site, _lineaje_payload, content_type='text/plain')
     except _gr_client.GuardrailUnavailableError:
         pass
