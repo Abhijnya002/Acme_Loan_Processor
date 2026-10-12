@@ -42,8 +42,6 @@ def _lineaje_current_model():
         for _key in _keys:
             if _values.get(_key): return _values[_key]
     return next((_o.environ[_key].strip() for _key in _keys if _o.environ.get(_key, "").strip()), "")
-
-
 import base64
 import io
 import logging
@@ -221,6 +219,12 @@ class ImageParser:
                 await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
             except Exception:
                 pass
+            try:
+                _lineaje_obs = _lineaje_load_gr_client()
+                _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:b8e6ccf9da718d49ff939c1a9c720bbf873df6699e4ad92e754910c44325bb5b', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/file_parsers/image_parser.py', 'line': 224, 'function': 'extract_visible_text', 'agent_name': 'ImageParser', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.model_client.chat_vision'}, observe_only=True)
+                await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+            except Exception:
+                pass
             transcription = await self.model_client.chat_vision(
                 model=model,
                 image_base64=base64.b64encode(image_bytes).decode("utf-8"),
@@ -242,6 +246,15 @@ class ImageParser:
                 pass
             except PermissionError:
                 pass
+            # LINEAJE: enforce() `_lineaje_payload` at agent->log log_emit — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:2c1b1a8641b6aa3630324c70749bbc219798c93d1aa1633fbc6dd3fded335f38'
+            _gr_client = _lineaje_load_gr_client()
+            _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:2c1b1a8641b6aa3630324c70749bbc219798c93d1aa1633fbc6dd3fded335f38', phase='log_emit', boundary={'source': 'log', 'sink': 'log'}, candidate_policies=[{'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='log', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/file_parsers/image_parser.py', 'line': 245, 'function': 'ImageParser.extract_visible_text'}})
+            try:
+                _lineaje_payload = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_payload, content_type='application/json'))
+            except _gr_client.GuardrailUnavailableError:
+                pass
+            except PermissionError:
+                pass
             logger.info(
                 _lineaje_payload,
                 extra={"model": model, "text_preview": transcription[:200]},
@@ -255,12 +268,30 @@ class ImageParser:
                 pass
             except PermissionError:
                 pass
+            # LINEAJE: enforce() `transcription` at agent->user_interface data_egress — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:87621faeaeccc4de0b4147e96c46a659683f6c51e9e286df10069eea487b9c9b'
+            _gr_client = _lineaje_load_gr_client()
+            _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:87621faeaeccc4de0b4147e96c46a659683f6c51e9e286df10069eea487b9c9b', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/file_parsers/image_parser.py', 'line': 258, 'function': 'ImageParser.extract_visible_text'}})
+            try:
+                transcription = _gr_client.enforce(_gr_site, transcription, content_type='text/plain')
+            except _gr_client.GuardrailUnavailableError:
+                pass
+            except PermissionError:
+                pass
             return transcription
         except Exception as exc:
             _lineaje_payload = f"Image vision transcription error: {exc}"
             # LINEAJE: enforce() `_lineaje_payload` at agent->log log_emit — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:f0ac34bac31196685f08ed64f5f0548140bde0e24ef4964599a2e56f1ee4904f'
             _gr_client = _lineaje_load_gr_client()
             _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:f0ac34bac31196685f08ed64f5f0548140bde0e24ef4964599a2e56f1ee4904f', phase='log_emit', boundary={'source': 'log', 'sink': 'log'}, candidate_policies=[{'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='log', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/file_parsers/image_parser.py', 'line': 163, 'function': 'ImageParser.extract_visible_text'}})
+            try:
+                _lineaje_payload = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_payload, content_type='application/json'))
+            except _gr_client.GuardrailUnavailableError:
+                pass
+            except PermissionError:
+                pass
+            # LINEAJE: enforce() `_lineaje_payload` at agent->log log_emit — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:90a76390d9acd21bf0bfb9033c0bb05fc83bb5c6eb3006e388681f10df8a3c93'
+            _gr_client = _lineaje_load_gr_client()
+            _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:90a76390d9acd21bf0bfb9033c0bb05fc83bb5c6eb3006e388681f10df8a3c93', phase='log_emit', boundary={'source': 'log', 'sink': 'log'}, candidate_policies=[{'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='log', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/file_parsers/image_parser.py', 'line': 270, 'function': 'ImageParser.extract_visible_text'}})
             try:
                 _lineaje_payload = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_payload, content_type='application/json'))
             except _gr_client.GuardrailUnavailableError:
@@ -302,6 +333,15 @@ class ImageParser:
 
         if text_content:
             _lineaje_payload = f"Image Metadata:\n{text_content}"
+            # LINEAJE: enforce() `_lineaje_payload` at agent->user_interface data_egress — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:2c52ba66243f3264fccfdc6286e04116951f6df4f6e8ffafe7a98890d2164c17'
+            _gr_client = _lineaje_load_gr_client()
+            _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:2c52ba66243f3264fccfdc6286e04116951f6df4f6e8ffafe7a98890d2164c17', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/file_parsers/image_parser.py', 'line': 304, 'function': 'ImageParser.extract_all'}})
+            try:
+                _lineaje_payload = _gr_client.enforce(_gr_site, _lineaje_payload, content_type='text/plain')
+            except _gr_client.GuardrailUnavailableError:
+                pass
+            except PermissionError:
+                pass
             # LINEAJE: enforce() `_lineaje_payload` at agent->user_interface data_egress — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:78fe56b0963fdc90c0d676ba6262c6f74605eb8b4860823e37a3919dffaa2bb8'
             _gr_client = _lineaje_load_gr_client()
             _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:78fe56b0963fdc90c0d676ba6262c6f74605eb8b4860823e37a3919dffaa2bb8', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/file_parsers/image_parser.py', 'line': 182, 'function': 'ImageParser.extract_all'}})
@@ -315,6 +355,15 @@ class ImageParser:
 
         if visible_text:
             _lineaje_payload = f"Visible Text in Image:\n{visible_text}"
+            # LINEAJE: enforce() `_lineaje_payload` at agent->user_interface data_egress — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:4e4916fa8e473fa26ef137629274c14d8ed6be787d1bef5eab4e6157ab20bac8'
+            _gr_client = _lineaje_load_gr_client()
+            _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:4e4916fa8e473fa26ef137629274c14d8ed6be787d1bef5eab4e6157ab20bac8', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/file_parsers/image_parser.py', 'line': 317, 'function': 'ImageParser.extract_all'}})
+            try:
+                _lineaje_payload = _gr_client.enforce(_gr_site, _lineaje_payload, content_type='text/plain')
+            except _gr_client.GuardrailUnavailableError:
+                pass
+            except PermissionError:
+                pass
             # LINEAJE: enforce() `_lineaje_payload` at agent->user_interface data_egress — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:45a4d184fa100cf073d8e9b48f45da2d3e8bd06151dfc07b3f0386e26378ac7a'
             _gr_client = _lineaje_load_gr_client()
             _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:45a4d184fa100cf073d8e9b48f45da2d3e8bd06151dfc07b3f0386e26378ac7a', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/file_parsers/image_parser.py', 'line': 185, 'function': 'ImageParser.extract_all'}})
