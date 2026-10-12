@@ -36,8 +36,6 @@ def _lineaje_current_model():
         for _key in _keys:
             if _values.get(_key): return _values[_key]
     return next((_o.environ[_key].strip() for _key in _keys if _o.environ.get(_key, "").strip()), "")
-
-
 import asyncio
 import logging
 import os
@@ -302,6 +300,12 @@ class OpenAICompatibleClient:
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
         except Exception:
             pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:f43bc0a02ffd706abb3a76e3c0d6beea73c003cda3c7dcfc3f80211568e7f1b1', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/llm/openai_compatible.py', 'line': 305, 'function': 'chat', 'agent_name': 'OpenAICompatibleClient', 'agent_name_source': 'inferred_from_class', 'call_target': 'asyncio.to_thread'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+        except Exception:
+            pass
         return await asyncio.to_thread(_post)
 
     async def chat_vision(
@@ -316,6 +320,12 @@ class OpenAICompatibleClient:
         try:
             _lineaje_obs = _lineaje_load_gr_client()
             _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:afe5b385aea3b74c511ea6b56a036eecbcb4963c9cb4a3d9921f819d5e65d042', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/llm/openai_compatible.py', 'line': 209, 'function': 'chat_vision', 'agent_name': 'OpenAICompatibleClient', 'agent_name_source': 'inferred_from_class'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+        except Exception:
+            pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:fe37a0e911db5588e60166706a4d876611838388cb43b3f2a7ab89943cad6bd9', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/llm/openai_compatible.py', 'line': 322, 'function': 'chat_vision', 'agent_name': 'OpenAICompatibleClient', 'agent_name_source': 'inferred_from_class'}, observe_only=True)
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
         except Exception:
             pass
@@ -334,6 +344,12 @@ class OpenAICompatibleClient:
         try:
             _lineaje_obs = _lineaje_load_gr_client()
             _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:12a3c5894678fa2b2badfac645a33085132c137d8cec5b01fd42ed23a3bd9a06', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/llm/openai_compatible.py', 'line': 217, 'function': 'chat_vision', 'agent_name': 'OpenAICompatibleClient', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.chat'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+        except Exception:
+            pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:5d642a0bbbb940d48e68b194385f504561fb31698156130b7dfb8c456b341250', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/llm/openai_compatible.py', 'line': 340, 'function': 'chat_vision', 'agent_name': 'OpenAICompatibleClient', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.chat'}, observe_only=True)
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
         except Exception:
             pass
