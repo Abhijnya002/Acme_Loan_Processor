@@ -41,8 +41,6 @@ def _lineaje_current_model():
         for _key in _keys:
             if _values.get(_key): return _values[_key]
     return next((_o.environ[_key].strip() for _key in _keys if _o.environ.get(_key, "").strip()), "")
-
-
 import asyncio
 import logging
 import os
@@ -139,7 +137,22 @@ class BedrockClient:
         if not active_region:
             return "LLM service not configured. Please set AWS_REGION or AWS_DEFAULT_REGION."
 
+        # LINEAJE: enforce() `messages` at agent->llm pre_model — scan flagged AI_APP_SEC_001 (Do not allow malicious content via hidden prompts); AI_APP_SEC_070 (Detect and block all forms of prompt injection attacks in user inputs and file contents). Mask/block; do not remove without review. site_id='site:sha256:32028d8433522a0900d91f1fe9f829f052ba4bea799282659f7a60645086149a'
+        _gr_client = _lineaje_load_gr_client()
+        _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:32028d8433522a0900d91f1fe9f829f052ba4bea799282659f7a60645086149a', phase='pre_model', boundary={'source': 'agent_message', 'sink': 'model'}, candidate_policies=[{'policy_id': 'AI_APP_SEC_006', 'policy_name': "Use only LLMs from the organization's approved list.", 'guardrail_id': 'Enforce Approved LLM.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_038', 'policy_name': 'The AI Model must validate and sanitize any input before processing.', 'guardrail_id': 'Sanitize LLM Input', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_067', 'policy_name': 'Detect direct string interpolation of untrusted input into LLM prompts', 'guardrail_id': 'Enforce structural separation of untrusted input from LLM prompt templates', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_001', 'policy_name': 'Do not allow malicious content via hidden prompts', 'guardrail_id': 'Replace suspicious prompt', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_039', 'policy_name': 'Sanitize and validate all input to the AI Model.', 'guardrail_id': 'Sanitize LLM input', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_080', 'policy_name': 'Do not allow refusal-triggering language in LLM driven analysis pipeline', 'guardrail_id': 'Replace refusal-triggering language in untrusted content', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_032', 'policy_name': 'Do not allow malicious content via hidden prompts written in leetspeak.', 'guardrail_id': 'Remove prompts in leetspeak', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_028', 'policy_name': "Do not use LLMs from the organization's disallowed list", 'guardrail_id': 'Enforce Approved LLM', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_059', 'policy_name': 'Do not allow prompts that can execute malicious commands at runtime.', 'guardrail_id': 'Block runtime command execution prompts.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_002', 'policy_name': 'Do not allow malicious content via encoded prompts', 'guardrail_id': 'Replace suspicious prompt.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_070', 'policy_name': 'Detect and block all forms of prompt injection attacks in user inputs and file contents', 'guardrail_id': 'Neutralize all detected prompt injection payloads', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_DAT_SEC_011', 'policy_name': 'Do not send PII and/or secrets to AI Models', 'guardrail_id': 'Redact PII', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_071', 'policy_name': 'Enforce chemical, biological, radiological, or nuclear (CBRN) threat prevention safeguards in AI-enabled systems', 'guardrail_id': 'Add CBRN screening and biological data safeguards.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'AI agent activity must be logged via OpenTelemetry.', 'guardrail_id': 'Emit Agent Activity via OpenTelemetry (single prompt)', 'policy_version': '2026.08.1'}], fail_mode='BLOCK', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/llm/bedrock.py', 'line': 300, 'name': 'BedrockClient'}, 'destination': {'entity_type': 'llm', 'name': 'amazon.nova-micro-v1:0', 'version': '', 'provider': 'amazon'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'BedrockClient', 'version': '1.0.0', 'purl': 'pkg:aiagent/BedrockClient@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}, 'destination': {'entity_type': 'aimodel', 'name': 'amazon.nova-micro-v1:0', 'version': 'v1:0', 'purl': 'pkg:aimodel/amazon.nova-micro-v1%3A0@v1:0'}}, 'invocation': {'file': 'backend/llm/bedrock.py', 'line': 142, 'function': 'BedrockClient.chat'}})
+        try:
+            messages = _gr_client.enforce(_gr_site, messages, content_type='application/json', variable_name='messages', source_file=__file__, before_line=142)
+        except _gr_client.GuardrailUnavailableError:
+            pass
+        except PermissionError:
+            raise
         bedrock_messages, system_prompts = self._format_messages(messages)
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:c900952755daf24f242304b65bbac8caffb213b87ee337bc4a506c9c4c6b6acf', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='llm', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/llm/bedrock.py', 'line': 142, 'function': 'chat', 'agent_name': 'BedrockClient', 'agent_name_source': 'inferred_from_class', 'call_target': 'self._format_messages'}, observe_only=True, interaction_id=locals().get('_lineaje_interaction_id'))
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'llm_to_agent'}, content_type='application/json'))
+        except Exception:
+            pass
 
         _lineaje_payload = "Sending request to Amazon Bedrock"
         # LINEAJE: enforce() `_lineaje_payload` at agent->log log_emit — scan flagged AI_APP_SEC_001 (Do not allow malicious content via hidden prompts). Mask/block; do not remove without review. site_id='site:sha256:d70f9b70d98a31611210c1895d1372cc6efa22d9dde78c6d8f8254d32e0744a8'
@@ -172,6 +185,12 @@ class BedrockClient:
                 await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
             except Exception:
                 pass
+            try:
+                _lineaje_obs = _lineaje_load_gr_client()
+                _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:18774db1b32c728697ef4ef305c1dbf4c7aee3e07eeafbff11cc7634e369ce9e', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/llm/bedrock.py', 'line': 175, 'function': 'chat', 'agent_name': 'BedrockClient', 'agent_name_source': 'inferred_from_class', 'call_target': 'asyncio.to_thread'}, observe_only=True)
+                await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+            except Exception:
+                pass
             response = await asyncio.to_thread(
                 self._converse,
                 active_model,
@@ -187,6 +206,15 @@ class BedrockClient:
             # LINEAJE: enforce() `_lineaje_payload` at agent->log log_emit — scan flagged AI_APP_SEC_001 (Do not allow malicious content via hidden prompts). Mask/block; do not remove without review. site_id='site:sha256:43e225ac3346508e712e780a2bb0e8264d51c926772fdd2565befccc6952138b'
             _gr_client = _lineaje_load_gr_client()
             _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:43e225ac3346508e712e780a2bb0e8264d51c926772fdd2565befccc6952138b', phase='log_emit', boundary={'source': 'log', 'sink': 'log'}, candidate_policies=[{'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='log', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/llm/bedrock.py', 'line': 176, 'name': 'BedrockClient'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'BedrockClient', 'version': '1.0.0', 'purl': 'pkg:aiagent/BedrockClient@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/llm/bedrock.py', 'line': 127, 'function': 'BedrockClient.chat'}})
+            try:
+                _lineaje_payload = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_payload, content_type='application/json'))
+            except _gr_client.GuardrailUnavailableError:
+                pass
+            except PermissionError:
+                pass
+            # LINEAJE: enforce() `_lineaje_payload` at agent->log log_emit — scan flagged AI_APP_SEC_001 (Do not allow malicious content via hidden prompts). Mask/block; do not remove without review. site_id='site:sha256:8cdb994c9e9a46bdad5c6166a4108acbfd07d712840d4f40d82952851ceb645b'
+            _gr_client = _lineaje_load_gr_client()
+            _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:8cdb994c9e9a46bdad5c6166a4108acbfd07d712840d4f40d82952851ceb645b', phase='log_emit', boundary={'source': 'log', 'sink': 'log'}, candidate_policies=[{'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='log', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/llm/bedrock.py', 'line': 300, 'name': 'BedrockClient'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'BedrockClient', 'version': '1.0.0', 'purl': 'pkg:aiagent/BedrockClient@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/llm/bedrock.py', 'line': 196, 'function': 'BedrockClient.chat'}})
             try:
                 _lineaje_payload = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_payload, content_type='application/json'))
             except _gr_client.GuardrailUnavailableError:
@@ -211,6 +239,15 @@ class BedrockClient:
                 pass
             except PermissionError:
                 pass
+            # LINEAJE: enforce() `content` at agent->user_interface data_egress — scan flagged AI_APP_SEC_001 (Do not allow malicious content via hidden prompts). Mask/block; do not remove without review. site_id='site:sha256:6b09f6ebf9e69d96c29f57cf05def9cce596dfb27a34b93e1ebbbae4dbdb3e39'
+            _gr_client = _lineaje_load_gr_client()
+            _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:6b09f6ebf9e69d96c29f57cf05def9cce596dfb27a34b93e1ebbbae4dbdb3e39', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/llm/bedrock.py', 'line': 300, 'name': 'BedrockClient'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'BedrockClient', 'version': '1.0.0', 'purl': 'pkg:aiagent/BedrockClient@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/llm/bedrock.py', 'line': 214, 'function': 'BedrockClient.chat'}})
+            try:
+                content = _gr_client.enforce(_gr_site, content, content_type='text/plain')
+            except _gr_client.GuardrailUnavailableError:
+                pass
+            except PermissionError:
+                pass
             return content
 
         except NoCredentialsError:
@@ -218,6 +255,15 @@ class BedrockClient:
             # LINEAJE: enforce() `_lineaje_payload` at agent->log log_emit — scan flagged AI_APP_SEC_001 (Do not allow malicious content via hidden prompts). Mask/block; do not remove without review. site_id='site:sha256:ebda275c14f8ee88c0f2cfdda8d5a52a2f53ab8d3be166e4804e0464eb421014'
             _gr_client = _lineaje_load_gr_client()
             _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:ebda275c14f8ee88c0f2cfdda8d5a52a2f53ab8d3be166e4804e0464eb421014', phase='log_emit', boundary={'source': 'log', 'sink': 'log'}, candidate_policies=[{'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='log', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/llm/bedrock.py', 'line': 176, 'name': 'BedrockClient'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'BedrockClient', 'version': '1.0.0', 'purl': 'pkg:aiagent/BedrockClient@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/llm/bedrock.py', 'line': 139, 'function': 'BedrockClient.chat'}})
+            try:
+                _lineaje_payload = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_payload, content_type='application/json'))
+            except _gr_client.GuardrailUnavailableError:
+                pass
+            except PermissionError:
+                pass
+            # LINEAJE: enforce() `_lineaje_payload` at agent->log log_emit — scan flagged AI_APP_SEC_001 (Do not allow malicious content via hidden prompts). Mask/block; do not remove without review. site_id='site:sha256:8bcde1d9eedb44a45f7eb799c3b5d687b4dc6f7bca3f7e132fb2ee96a103d26b'
+            _gr_client = _lineaje_load_gr_client()
+            _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:8bcde1d9eedb44a45f7eb799c3b5d687b4dc6f7bca3f7e132fb2ee96a103d26b', phase='log_emit', boundary={'source': 'log', 'sink': 'log'}, candidate_policies=[{'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='log', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/llm/bedrock.py', 'line': 300, 'name': 'BedrockClient'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'BedrockClient', 'version': '1.0.0', 'purl': 'pkg:aiagent/BedrockClient@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/llm/bedrock.py', 'line': 227, 'function': 'BedrockClient.chat'}})
             try:
                 _lineaje_payload = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_payload, content_type='application/json'))
             except _gr_client.GuardrailUnavailableError:
@@ -383,6 +429,12 @@ class BedrockClient:
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
         except Exception:
             pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:f154ed7129630f00f93626632399c29b1970adfd525965042d0fd72d031f3025', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/llm/bedrock.py', 'line': 386, 'function': 'chat_with_context', 'agent_name': 'BedrockClient', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.chat'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+        except Exception:
+            pass
         return await self.chat(messages)
 
     async def analyze_document(self, content: str) -> str:
@@ -396,6 +448,12 @@ class BedrockClient:
         try:
             _lineaje_obs = _lineaje_load_gr_client()
             _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:05ac125661c96cb794737f924d179a96339d7ff5c0ce63a8550fa825be78a512', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/llm/bedrock.py', 'line': 246, 'function': 'analyze_document', 'agent_name': 'BedrockClient', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.chat_with_context'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+        except Exception:
+            pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:dcaa81c4bf1712efd0bcf1cc348acd4bcca3228964bd92042a06cc10074507f2', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/llm/bedrock.py', 'line': 402, 'function': 'analyze_document', 'agent_name': 'BedrockClient', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.chat_with_context'}, observe_only=True)
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
         except Exception:
             pass
