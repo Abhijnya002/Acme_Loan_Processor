@@ -31,8 +31,6 @@ def _lineaje_current_model():
         for _key in _keys:
             if _values.get(_key): return _values[_key]
     return next((_o.environ[_key].strip() for _key in _keys if _o.environ.get(_key, "").strip()), "")
-
-
 import asyncio
 import logging
 from typing import Any
@@ -89,7 +87,18 @@ class InstalledSkillAgent(AcmeLoanAgentFramework):
             _lineaje_self_skill_evidence = _gr_client.enforce(_gr_site, _lineaje_self_skill_evidence, content_type='application/json')
             self.skill = load_skill(self.SKILL_ID)
         except _gr_client.GuardrailUnavailableError:
-            self.skill = load_skill(self.SKILL_ID)
+            # LINEAJE: enforce() `self.skill` at skill_manifest->skill_check skill_check — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:8ecc227ea52addb052ee7a6d115a57b48a216baf0e89027d6ffc6dd6ad659651'
+            _lineaje_self_skill_evidence = {'skill_id': self.SKILL_ID, 'project': 'lineaje-openclaw'}
+            _gr_client = _lineaje_load_gr_client()
+            _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:8ecc227ea52addb052ee7a6d115a57b48a216baf0e89027d6ffc6dd6ad659651', phase='skill_check', boundary={'source': 'skill_manifest', 'sink': 'skill_check'}, candidate_policies=[{'policy_id': 'AI_SKILL_DAT_SEC_001', 'policy_name': 'Do not allow skills that exfiltrate data', 'guardrail_id': 'Block skills that exfiltrate data', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_003', 'policy_name': 'Do not allow skills that are pending a scan', 'guardrail_id': 'Block skills that are pending a scan', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_001', 'policy_name': 'Do not allow use of malicious skills', 'guardrail_id': 'Block MALICIOUS skills', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_002', 'policy_name': 'Do not allow use of suspicious skills', 'guardrail_id': 'Block SUSPICIOUS skills', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='skill_manifest', destination_type='skill_check', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/agents/installed_skill_agent.py', 'line': 60, 'name': 'InstalledSkillAgent'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'InstalledSkillAgent', 'version': '1.0.0', 'purl': 'pkg:aiagent/InstalledSkillAgent@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/installed_skill_agent.py', 'line': 92, 'function': 'InstalledSkillAgent.__init__'}})
+            try:
+                _lineaje_self_skill_evidence = _gr_client.enforce(_gr_site, _lineaje_self_skill_evidence, content_type='application/json')
+                self.skill = load_skill(self.SKILL_ID)
+            except _gr_client.GuardrailUnavailableError:
+                self.skill = load_skill(self.SKILL_ID)
+            except PermissionError:
+                self.skill = {"content": "", "loaded": False, "references": {}}
+                __import__("logging").getLogger("lineaje.gr_client").warning("gr_client[skill_manifest->skill_check]: quarantined skill not loaded")
         except PermissionError:
             self.skill = {"content": "", "loaded": False, "references": {}}
             __import__("logging").getLogger("lineaje.gr_client").warning("gr_client[skill_manifest->skill_check]: quarantined skill not loaded")
@@ -178,6 +187,12 @@ class InstalledSkillAgent(AcmeLoanAgentFramework):
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
         except Exception:
             pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:f5ebe86481220e4fe16a9376ee8a7d99b052882ba1799b25b15ca24998bfcf90', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/installed_skill_agent.py', 'line': 181, 'function': 'call_agent_model', 'agent_name': 'InstalledSkillAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.call_bedrock_model'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+        except Exception:
+            pass
         return await self.call_bedrock_model(
             messages=[
                 {"role": "system", "content": skill_content or self.SYSTEM_PROMPT},
@@ -200,10 +215,22 @@ class InstalledSkillAgent(AcmeLoanAgentFramework):
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'ui_to_agent'}, content_type='application/json'))
         except Exception:
             pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:6d2da004f1cf4d053315e12cbc64b72309132771bd9cdd259a0848dae924fb3f', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='user_interface', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/installed_skill_agent.py', 'line': 203, 'function': 'handle', 'agent_name': 'InstalledSkillAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'context.get'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'ui_to_agent'}, content_type='application/json'))
+        except Exception:
+            pass
         user_message = context.get("user_message", "")
         try:
             _lineaje_obs = _lineaje_load_gr_client()
             _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:b70ccb1bd4def305da89134e057850c1185f05d87a215a9bba4c0c2f0c307ba2', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='database', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/installed_skill_agent.py', 'line': 129, 'function': 'handle', 'agent_name': 'InstalledSkillAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'lookup_loan_document'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'db_read'}, content_type='application/json'))
+        except Exception:
+            pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:c7be6ccf8af8c17b0722135a5223fe893c31f4c84dec0edb22bb6690cb42ac92', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='database', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/installed_skill_agent.py', 'line': 210, 'function': 'handle', 'agent_name': 'InstalledSkillAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'lookup_loan_document'}, observe_only=True)
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'db_read'}, content_type='application/json'))
         except Exception:
             pass
@@ -222,9 +249,31 @@ class InstalledSkillAgent(AcmeLoanAgentFramework):
         _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:a7174893f1861ccc89041fb2c4fcdc5b1619c0fe7cf441e356fa16437d8cecfe', phase='skill_check', boundary={'source': 'skill_manifest', 'sink': 'skill_check'}, candidate_policies=[{'policy_id': 'AI_SKILL_DAT_SEC_001', 'policy_name': 'Do not allow skills that exfiltrate data', 'guardrail_id': 'Block skills that exfiltrate data', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_003', 'policy_name': 'Do not allow skills that are pending a scan', 'guardrail_id': 'Block skills that are pending a scan', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_001', 'policy_name': 'Do not allow use of malicious skills', 'guardrail_id': 'Block MALICIOUS skills', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_002', 'policy_name': 'Do not allow use of suspicious skills', 'guardrail_id': 'Block SUSPICIOUS skills', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='skill_manifest', destination_type='skill_check', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/agents/installed_skill_agent.py', 'line': 43, 'name': 'Mistral'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'Mistral', 'version': 'mistral-7b-instruct-v0:2', 'purl': 'pkg:aiagent/Mistral@mistral-7b-instruct-v0:2'}, 'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/installed_skill_agent.py', 'line': 138, 'function': 'InstalledSkillAgent.handle'}})
         try:
             _lineaje_pulled_skill_evidence = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_pulled_skill_evidence, content_type='application/json'))
-            pulled_skill = load_skill(self.SKILL_ID)
+            # LINEAJE: enforce() `pulled_skill` at skill_manifest->skill_check skill_check — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:e1fcd24b24cc2385bfa632d0166b110dfcd84a36761beb622f0749cfb7b61e3d'
+            _lineaje_pulled_skill_evidence = {'skill_id': self.SKILL_ID, 'project': 'lineaje-openclaw'}
+            _gr_client = _lineaje_load_gr_client()
+            _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:e1fcd24b24cc2385bfa632d0166b110dfcd84a36761beb622f0749cfb7b61e3d', phase='skill_check', boundary={'source': 'skill_manifest', 'sink': 'skill_check'}, candidate_policies=[{'policy_id': 'AI_SKILL_DAT_SEC_001', 'policy_name': 'Do not allow skills that exfiltrate data', 'guardrail_id': 'Block skills that exfiltrate data', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_003', 'policy_name': 'Do not allow skills that are pending a scan', 'guardrail_id': 'Block skills that are pending a scan', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_001', 'policy_name': 'Do not allow use of malicious skills', 'guardrail_id': 'Block MALICIOUS skills', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_002', 'policy_name': 'Do not allow use of suspicious skills', 'guardrail_id': 'Block SUSPICIOUS skills', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='skill_manifest', destination_type='skill_check', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/agents/installed_skill_agent.py', 'line': 60, 'name': 'InstalledSkillAgent'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'InstalledSkillAgent', 'version': '1.0.0', 'purl': 'pkg:aiagent/InstalledSkillAgent@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/installed_skill_agent.py', 'line': 225, 'function': 'InstalledSkillAgent.handle'}})
+            try:
+                _lineaje_pulled_skill_evidence = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_pulled_skill_evidence, content_type='application/json'))
+                pulled_skill = load_skill(self.SKILL_ID)
+            except _gr_client.GuardrailUnavailableError:
+                pulled_skill = load_skill(self.SKILL_ID)
+            except PermissionError:
+                pulled_skill = {"content": "", "loaded": False, "references": {}}
+                __import__("logging").getLogger("lineaje.gr_client").warning("gr_client[skill_manifest->skill_check]: quarantined skill not loaded")
         except _gr_client.GuardrailUnavailableError:
-            pulled_skill = load_skill(self.SKILL_ID)
+            # LINEAJE: enforce() `pulled_skill` at skill_manifest->skill_check skill_check — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:0ca6b626dfbc6e6a8e9f4d931d9649d9fa1137fc1e16d2e73b5e273928df152e'
+            _lineaje_pulled_skill_evidence = {'skill_id': self.SKILL_ID, 'project': 'lineaje-openclaw'}
+            _gr_client = _lineaje_load_gr_client()
+            _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:0ca6b626dfbc6e6a8e9f4d931d9649d9fa1137fc1e16d2e73b5e273928df152e', phase='skill_check', boundary={'source': 'skill_manifest', 'sink': 'skill_check'}, candidate_policies=[{'policy_id': 'AI_SKILL_DAT_SEC_001', 'policy_name': 'Do not allow skills that exfiltrate data', 'guardrail_id': 'Block skills that exfiltrate data', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_003', 'policy_name': 'Do not allow skills that are pending a scan', 'guardrail_id': 'Block skills that are pending a scan', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_001', 'policy_name': 'Do not allow use of malicious skills', 'guardrail_id': 'Block MALICIOUS skills', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_002', 'policy_name': 'Do not allow use of suspicious skills', 'guardrail_id': 'Block SUSPICIOUS skills', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='skill_manifest', destination_type='skill_check', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/agents/installed_skill_agent.py', 'line': 60, 'name': 'InstalledSkillAgent'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'InstalledSkillAgent', 'version': '1.0.0', 'purl': 'pkg:aiagent/InstalledSkillAgent@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/installed_skill_agent.py', 'line': 227, 'function': 'InstalledSkillAgent.handle'}})
+            try:
+                _lineaje_pulled_skill_evidence = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_pulled_skill_evidence, content_type='application/json'))
+                pulled_skill = load_skill(self.SKILL_ID)
+            except _gr_client.GuardrailUnavailableError:
+                pulled_skill = load_skill(self.SKILL_ID)
+            except PermissionError:
+                pulled_skill = {"content": "", "loaded": False, "references": {}}
+                __import__("logging").getLogger("lineaje.gr_client").warning("gr_client[skill_manifest->skill_check]: quarantined skill not loaded")
         except PermissionError:
             pulled_skill = {"content": "", "loaded": False, "references": {}}
             __import__("logging").getLogger("lineaje.gr_client").warning("gr_client[skill_manifest->skill_check]: quarantined skill not loaded")
@@ -236,6 +285,15 @@ class InstalledSkillAgent(AcmeLoanAgentFramework):
         # LINEAJE: enforce() `_lineaje_payload` at agent->log log_emit — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:3dcfaee4f03b9e8acdd9143dcd0fc81b3990bd708c078ebc62d6e50b83c05bf2'
         _gr_client = _lineaje_load_gr_client()
         _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:3dcfaee4f03b9e8acdd9143dcd0fc81b3990bd708c078ebc62d6e50b83c05bf2', phase='log_emit', boundary={'source': 'log', 'sink': 'log'}, candidate_policies=[{'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='log', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/agents/installed_skill_agent.py', 'line': 43, 'name': 'Mistral'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'Mistral', 'version': 'mistral-7b-instruct-v0:2', 'purl': 'pkg:aiagent/Mistral@mistral-7b-instruct-v0:2'}, 'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/installed_skill_agent.py', 'line': 143, 'function': 'InstalledSkillAgent.handle'}})
+        try:
+            _lineaje_payload = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_payload, content_type='application/json'))
+        except _gr_client.GuardrailUnavailableError:
+            pass
+        except PermissionError:
+            pass
+        # LINEAJE: enforce() `_lineaje_payload` at agent->log log_emit — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:6b56e33e359953c6e9352ca9c9538762ab9ee1670dc68e8b2bb295c8679dca89'
+        _gr_client = _lineaje_load_gr_client()
+        _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:6b56e33e359953c6e9352ca9c9538762ab9ee1670dc68e8b2bb295c8679dca89', phase='log_emit', boundary={'source': 'log', 'sink': 'log'}, candidate_policies=[{'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='log', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/agents/installed_skill_agent.py', 'line': 60, 'name': 'InstalledSkillAgent'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'InstalledSkillAgent', 'version': '1.0.0', 'purl': 'pkg:aiagent/InstalledSkillAgent@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/installed_skill_agent.py', 'line': 245, 'function': 'InstalledSkillAgent.handle'}})
         try:
             _lineaje_payload = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_payload, content_type='application/json'))
         except _gr_client.GuardrailUnavailableError:
@@ -266,6 +324,17 @@ class InstalledSkillAgent(AcmeLoanAgentFramework):
             pass
         except PermissionError:
             raise
+        # LINEAJE: enforce() `skill_content` at skill_manifest->skill_check skill_check — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:229df5f36d8ac860d124b98d5d9f3e16a7e297ba4e6a52ad28691d38c5c14345'
+        _lineaje_skill_content_evidence = {'skill_content': skill_content, 'skill_body': skill_content, 'skill_path': str((pulled_skill or {}).get('path') or (pulled_skill or {}).get('skill_path') or ''), 'skill_id': (pulled_skill or {}).get('id') or (pulled_skill or {}).get('skill_id') or '', 'project': 'lineaje-openclaw'}
+        _gr_client = _lineaje_load_gr_client()
+        _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:229df5f36d8ac860d124b98d5d9f3e16a7e297ba4e6a52ad28691d38c5c14345', phase='skill_check', boundary={'source': 'skill_manifest', 'sink': 'skill_check'}, candidate_policies=[{'policy_id': 'AI_SKILL_DAT_SEC_001', 'policy_name': 'Do not allow skills that exfiltrate data', 'guardrail_id': 'Block skills that exfiltrate data', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_003', 'policy_name': 'Do not allow skills that are pending a scan', 'guardrail_id': 'Block skills that are pending a scan', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_001', 'policy_name': 'Do not allow use of malicious skills', 'guardrail_id': 'Block MALICIOUS skills', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_SKILL_SEC_002', 'policy_name': 'Do not allow use of suspicious skills', 'guardrail_id': 'Block SUSPICIOUS skills', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='skill_manifest', destination_type='skill_check', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/agents/installed_skill_agent.py', 'line': 60, 'name': 'InstalledSkillAgent'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'InstalledSkillAgent', 'version': '1.0.0', 'purl': 'pkg:aiagent/InstalledSkillAgent@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/installed_skill_agent.py', 'line': 269, 'function': 'InstalledSkillAgent.handle'}})
+        try:
+            _lineaje_skill_content_evidence = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_skill_content_evidence, content_type='application/json'))
+            skill_content = _lineaje_skill_content_evidence.get('skill_content', skill_content) if isinstance(_lineaje_skill_content_evidence, dict) else skill_content
+        except _gr_client.GuardrailUnavailableError:
+            pass
+        except PermissionError:
+            raise
         await self.call_agent_model(user_message, skill_content)
 
         await asyncio.sleep(WORKFLOW_STAGE_DURATIONS_MS["skill_execute"] / 1000)
@@ -284,6 +353,12 @@ class InstalledSkillAgent(AcmeLoanAgentFramework):
         try:
             _lineaje_obs = _lineaje_load_gr_client()
             _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:a7f65876153137a7b364ec22124d79001fd2cbec13e5434385e07a7a1ff922b2', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/installed_skill_agent.py', 'line': 171, 'function': 'handle', 'agent_name': 'InstalledSkillAgent', 'agent_name_source': 'inferred_from_class', 'site_kind': 'return'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json'))
+        except Exception:
+            pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:cfe4492a8f66c4dbfb26742b1dd437093fd6c2293046ab7715ac3f188c28cf09', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/installed_skill_agent.py', 'line': 290, 'function': 'handle', 'agent_name': 'InstalledSkillAgent', 'agent_name_source': 'inferred_from_class', 'site_kind': 'return'}, observe_only=True)
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json'))
         except Exception:
             pass
