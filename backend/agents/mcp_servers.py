@@ -31,8 +31,6 @@ def _lineaje_current_model():
         for _key in _keys:
             if _values.get(_key): return _values[_key]
     return next((_o.environ[_key].strip() for _key in _keys if _o.environ.get(_key, "").strip()), "")
-
-
 import asyncio
 import os
 from typing import Any
@@ -157,6 +155,12 @@ async def call_mcp_server(
     for header_name, header_value in agent.get("external_system_credentials", {}).get(server_name, {}).items():
         headers[header_name] = header_value
 
+    try:
+        _lineaje_obs = _lineaje_load_gr_client()
+        _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:ed37c226b46e1d8acc22993d3366e680866f6d4c0baedb5ccd15a703a1023b75', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/mcp_servers.py', 'line': 166, 'function': 'call_mcp_server', 'agent_name': 'call_mcp_server', 'agent_name_source': 'inferred_from_function'}, observe_only=True)
+        await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+    except Exception:
+        pass
     payload = {
         "jsonrpc": "2.0",
         "id": str(uuid4()),
@@ -169,6 +173,12 @@ async def call_mcp_server(
 
     def _post() -> dict[str, Any]:
         try:
+            try:
+                _lineaje_obs = _lineaje_load_gr_client()
+                _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:937bb82ed0a518361c2df50b592e3e86073968c8bed7716d7ec2ba4f7e0ab54e', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='tool', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/mcp_servers.py', 'line': 172, 'function': '_post', 'agent_name': '_post', 'agent_name_source': 'inferred_from_function', 'call_target': 'requests.post', 'tool_protocol': 'local', 'tool_protocol_source': 'scan: no MCP client imported'}, observe_only=True)
+                _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'mcp_call'}, content_type='application/json')
+            except Exception:
+                pass
             response = requests.post(
                 server["endpoint"],
                 json=payload,
