@@ -492,6 +492,7 @@ export async function gr_observe(
 import { WorkflowStage } from '../components/SkillWorkflowProgress'
 
 export function isLoanDocumentWorkflow(message: string): boolean {
+  void gr_observe("agent_to_llm", "agent", "llm", {"identity":{"app":{"name":"acme_loan_processor","version":"local-run","purl":"pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo"}},"invocation":{"file":"frontend/src/lib/skillWorkflow.ts","line":495,"function":"GRBlockedError.isLoanDocumentWorkflow"},"file":"frontend/src/lib/skillWorkflow.ts","line":495,"function":"isLoanDocumentWorkflow","agent_name":"isLoanDocumentWorkflow","agent_name_source":"inferred_from_function","call_target":"message.toLowerCase"}).catch(() => {}); // log-only
   const text = message.toLowerCase()
   return [
     'loan document',
@@ -504,6 +505,7 @@ export function isLoanDocumentWorkflow(message: string): boolean {
 }
 
 export function extractDocumentNumber(message: string): string {
+  void gr_observe("agent_to_llm", "agent", "llm", {"identity":{"app":{"name":"acme_loan_processor","version":"local-run","purl":"pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo"}},"invocation":{"file":"frontend/src/lib/skillWorkflow.ts","line":507,"function":"GRBlockedError.extractDocumentNumber"},"file":"frontend/src/lib/skillWorkflow.ts","line":507,"function":"extractDocumentNumber","agent_name":"extractDocumentNumber","agent_name_source":"inferred_from_function","call_target":"message.match"}).catch(() => {}); // log-only
   const match = message.match(/document number\s+(\d+)/i)
   return match?.[1] ?? '1523'
 }
@@ -556,6 +558,9 @@ export async function runWorkflowStages(
   for (let index = 0; index < completedStages.length; index += 1) {
     completedStages[index] = { ...completedStages[index], status: 'active' }
     try {
+      try {
+        await gr_observe("agent_to_ui", "agent", "user_interface", {"identity":{"app":{"name":"acme_loan_processor","version":"local-run","purl":"pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo"}},"invocation":{"file":"frontend/src/lib/skillWorkflow.ts","line":559,"function":"GRBlockedError.runWorkflowStages"},"file":"frontend/src/lib/skillWorkflow.ts","line":559,"function":"runWorkflowStages","agent_name":"runWorkflowStages","agent_name_source":"inferred_from_function","call_target":"gr_observe"});
+      } catch (_grExc) { /* log-only: never affects the app */ }
       await gr_observe("agent_to_ui", "agent", "user_interface", {"identity":{"app":{"name":"acme_loan_processor","version":"main","purl":"pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo"}},"invocation":{"file":"frontend/src/lib/skillWorkflow.ts","line":67,"function":"runWorkflowStages"},"file":"frontend/src/lib/skillWorkflow.ts","line":67,"function":"runWorkflowStages","agent_name":"runWorkflowStages","agent_name_source":"inferred_from_function","call_target":"onUpdate"});
     } catch (_grExc) { /* log-only: never affects the app */ }
     onUpdate(completedStages.map((stage) => ({ ...stage })))
@@ -564,11 +569,17 @@ export async function runWorkflowStages(
 
     completedStages[index] = { ...completedStages[index], status: 'complete' }
     try {
+      try {
+        await gr_observe("agent_to_ui", "agent", "user_interface", {"identity":{"app":{"name":"acme_loan_processor","version":"local-run","purl":"pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo"}},"invocation":{"file":"frontend/src/lib/skillWorkflow.ts","line":567,"function":"GRBlockedError.runWorkflowStages"},"file":"frontend/src/lib/skillWorkflow.ts","line":567,"function":"runWorkflowStages","agent_name":"runWorkflowStages","agent_name_source":"inferred_from_function","call_target":"gr_observe"});
+      } catch (_grExc) { /* log-only: never affects the app */ }
       await gr_observe("agent_to_ui", "agent", "user_interface", {"identity":{"app":{"name":"acme_loan_processor","version":"main","purl":"pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo"}},"invocation":{"file":"frontend/src/lib/skillWorkflow.ts","line":72,"function":"runWorkflowStages"},"file":"frontend/src/lib/skillWorkflow.ts","line":72,"function":"runWorkflowStages","agent_name":"runWorkflowStages","agent_name_source":"inferred_from_function","call_target":"onUpdate"});
     } catch (_grExc) { /* log-only: never affects the app */ }
     onUpdate(completedStages.map((stage) => ({ ...stage })))
   }
 
+  try {
+    await gr_observe("agent_to_ui", "agent", "user_interface", {"identity":{"app":{"name":"acme_loan_processor","version":"local-run","purl":"pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo"}},"invocation":{"file":"frontend/src/lib/skillWorkflow.ts","line":572,"function":"GRBlockedError.runWorkflowStages"},"file":"frontend/src/lib/skillWorkflow.ts","line":572,"function":"runWorkflowStages","agent_name":"runWorkflowStages","agent_name_source":"inferred_from_function","call_target":"gr_check(completedStages, \"agent\", \"user_interface\", \"\", 5000, { candidate_polic"});
+  } catch (_grExc) { /* log-only: never affects the app */ }
   void gr_check(completedStages, "agent", "user_interface", "", 5000, { candidate_policies: ["AI_APP_SEC_001", "AI_APP_SEC_002", "AI_APP_SEC_006", "AI_APP_SEC_022", "AI_APP_SEC_023", "AI_APP_SEC_028", "AI_APP_SEC_029", "AI_APP_SEC_032", "AI_APP_SEC_034", "AI_APP_SEC_035", "AI_APP_SEC_038", "AI_APP_SEC_039", "AI_APP_SEC_040", "AI_APP_SEC_059", "AI_APP_SEC_064", "AI_APP_SEC_066", "AI_APP_SEC_067", "AI_APP_SEC_068", "AI_APP_SEC_069", "AI_APP_SEC_071", "AI_APP_SEC_075", "AI_APP_SEC_078", "AI_DAT_SEC_001", "AI_DAT_SEC_009", "AI_DAT_SEC_010", "AI_DAT_SEC_011", "AI_DAT_SEC_012", "AI_DAT_SEC_023", "AI_DAT_SEC_024", "AI_DAT_SEC_025", "AI_DAT_SEC_027", "AI_DAT_SEC_029", "AI_DAT_SEC_030", "AI_IAC_002", "AI_IAC_007", "AI_IAC_008", "AI_IAC_009", "AI_IAC_014", "AI_IAC_015", "AI_IAC_016", "AI_IAC_017", "AI_IAC_018", "AI_IAC_020", "AI_IAC_022", "AI_IAC_023", "AI_IAC_024", "AI_IAC_025", "AI_IAC_026", "AI_IAC_031", "AI_VULN_SEC_005", "AI_AGENT_ACTIVITY_LOG"] }).catch((_grExc) => {
     if (_grExc instanceof GRBlockedError) {
       console.error("Lineaje: BLOCK at 'agent->user_interface' could not be enforced — call site is synchronous (fire-and-forget)");
