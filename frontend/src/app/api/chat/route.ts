@@ -498,10 +498,16 @@ export async function POST(request: NextRequest) {
     try {
       await gr_observe("ui_to_agent", "user_interface", "agent", {"identity":{"app":{"name":"acme_loan_processor","version":"main","purl":"pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo"}},"invocation":{"file":"frontend/src/app/api/chat/route.ts","line":7,"function":"POST"},"file":"frontend/src/app/api/chat/route.ts","line":7,"function":"POST","agent_name":"POST","agent_name_source":"inferred_from_function","call_target":"request.json"});
     } catch (_grExc) { /* log-only: never affects the app */ }
+    try {
+      await gr_observe("ui_to_agent", "user_interface", "agent", {"identity":{"app":{"name":"acme_loan_processor","version":"local-run","purl":"pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo"}},"invocation":{"file":"frontend/src/app/api/chat/route.ts","line":501,"function":"GRBlockedError.POST"},"file":"frontend/src/app/api/chat/route.ts","line":501,"function":"POST","agent_name":"POST","agent_name_source":"inferred_from_function","call_target":"request.json"});
+    } catch (_grExc) { /* log-only: never affects the app */ }
     const body = await request.json()
 
     try {
       await gr_observe("data_outbound", "agent", "external", {"identity":{"app":{"name":"acme_loan_processor","version":"main","purl":"pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo"}},"invocation":{"file":"frontend/src/app/api/chat/route.ts","line":9,"function":"POST"},"file":"frontend/src/app/api/chat/route.ts","line":9,"function":"POST","agent_name":"POST","agent_name_source":"inferred_from_function","call_target":"fetch"});
+    } catch (_grExc) { /* log-only: never affects the app */ }
+    try {
+      await gr_observe("data_outbound", "agent", "external", {"identity":{"app":{"name":"acme_loan_processor","version":"local-run","purl":"pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo"}},"invocation":{"file":"frontend/src/app/api/chat/route.ts","line":506,"function":"GRBlockedError.POST"},"file":"frontend/src/app/api/chat/route.ts","line":506,"function":"POST","agent_name":"POST","agent_name_source":"inferred_from_function","call_target":"fetch"});
     } catch (_grExc) { /* log-only: never affects the app */ }
     const response = await fetch(`${BACKEND_URL}/chat`, {
       method: 'POST',
@@ -519,6 +525,9 @@ export async function POST(request: NextRequest) {
           console.error("Lineaje: BLOCK at 'llm->user_interface' could not be enforced — call site is synchronous (fire-and-forget)");
         }
       }); // fire-and-forget (sync context)
+      try {
+        await gr_observe("agent_to_ui", "agent", "user_interface", {"identity":{"app":{"name":"acme_loan_processor","version":"local-run","purl":"pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo"}},"invocation":{"file":"frontend/src/app/api/chat/route.ts","line":522,"function":"GRBlockedError.POST"},"file":"frontend/src/app/api/chat/route.ts","line":522,"function":"POST","agent_name":"POST","agent_name_source":"inferred_from_function","call_target":"NextResponse.json"});
+      } catch (_grExc) { /* log-only: never affects the app */ }
       return NextResponse.json(data, { status: response.status })
     }
 
@@ -527,6 +536,9 @@ export async function POST(request: NextRequest) {
         console.error("Lineaje: BLOCK at 'llm->user_interface' could not be enforced — call site is synchronous (fire-and-forget)");
       }
     }); // fire-and-forget (sync context)
+    try {
+      await gr_observe("agent_to_ui", "agent", "user_interface", {"identity":{"app":{"name":"acme_loan_processor","version":"local-run","purl":"pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo"}},"invocation":{"file":"frontend/src/app/api/chat/route.ts","line":530,"function":"GRBlockedError.POST"},"file":"frontend/src/app/api/chat/route.ts","line":530,"function":"POST","agent_name":"POST","agent_name_source":"inferred_from_function","call_target":"NextResponse.json"});
+    } catch (_grExc) { /* log-only: never affects the app */ }
     return NextResponse.json(data)
   } catch (error) {
     void gr_check(error, "agent", "log", "", 5000, { candidate_policies: ["AI_APP_SEC_001", "AI_APP_SEC_002", "AI_APP_SEC_006", "AI_APP_SEC_014", "AI_APP_SEC_022", "AI_APP_SEC_023", "AI_APP_SEC_028", "AI_APP_SEC_029", "AI_APP_SEC_032", "AI_APP_SEC_033", "AI_APP_SEC_034", "AI_APP_SEC_035", "AI_APP_SEC_038", "AI_APP_SEC_039", "AI_APP_SEC_040", "AI_APP_SEC_059", "AI_APP_SEC_064", "AI_APP_SEC_066", "AI_APP_SEC_067", "AI_APP_SEC_068", "AI_APP_SEC_069", "AI_APP_SEC_071", "AI_APP_SEC_075", "AI_APP_SEC_078", "AI_DAT_SEC_001", "AI_DAT_SEC_009", "AI_DAT_SEC_010", "AI_DAT_SEC_011", "AI_DAT_SEC_012", "AI_DAT_SEC_023", "AI_DAT_SEC_024", "AI_DAT_SEC_025", "AI_DAT_SEC_027", "AI_DAT_SEC_029", "AI_DAT_SEC_030", "AI_IAC_002", "AI_IAC_006", "AI_IAC_007", "AI_IAC_008", "AI_IAC_009", "AI_IAC_014", "AI_IAC_015", "AI_IAC_016", "AI_IAC_017", "AI_IAC_018", "AI_IAC_020", "AI_IAC_022", "AI_IAC_023", "AI_IAC_024", "AI_IAC_025", "AI_IAC_026", "AI_IAC_031", "AI_VULN_SEC_005", "AI_AGENT_ACTIVITY_LOG"] }).catch((_grExc) => {
@@ -534,6 +546,9 @@ export async function POST(request: NextRequest) {
         console.error("Lineaje: BLOCK at 'agent->log' could not be enforced — call site is synchronous (fire-and-forget)");
       }
     }); // fire-and-forget (sync context)
+    try {
+      await gr_observe("agent_to_ui", "agent", "user_interface", {"identity":{"app":{"name":"acme_loan_processor","version":"local-run","purl":"pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo"}},"invocation":{"file":"frontend/src/app/api/chat/route.ts","line":538,"function":"GRBlockedError.POST"},"file":"frontend/src/app/api/chat/route.ts","line":538,"function":"POST","agent_name":"POST","agent_name_source":"inferred_from_function","call_target":"NextResponse.json"});
+    } catch (_grExc) { /* log-only: never affects the app */ }
     console.error('Backend proxy error:', error)
     return NextResponse.json(
       {
