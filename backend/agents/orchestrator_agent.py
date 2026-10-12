@@ -31,8 +31,6 @@ def _lineaje_current_model():
         for _key in _keys:
             if _values.get(_key): return _values[_key]
     return next((_o.environ[_key].strip() for _key in _keys if _o.environ.get(_key, "").strip()), "")
-
-
 import logging
 from typing import Any
 
@@ -71,6 +69,12 @@ class OrchestratorAgent(AcmeLoanAgentFramework):
         try:
             _lineaje_obs = _lineaje_load_gr_client()
             _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:e54ae34fb18410bc70d762f1a8419d3b298aa7cbc586f959cfb3841b58490d2a', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/orchestrator_agent.py', 'line': 38, 'function': 'call_agent_model', 'agent_name': 'OrchestratorAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.call_bedrock_model'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+        except Exception:
+            pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:5da5a11996de569a5eec912bbd9afeda30eb37e872a7c165977bbc1800708116', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/orchestrator_agent.py', 'line': 77, 'function': 'call_agent_model', 'agent_name': 'OrchestratorAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.call_bedrock_model'}, observe_only=True)
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
         except Exception:
             pass
@@ -150,12 +154,36 @@ class OrchestratorAgent(AcmeLoanAgentFramework):
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_agent'}, content_type='application/json'))
         except Exception:
             pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:6a801ca91830f3918100dc2a6e82602d938ea7b5a90966f7e3cf9b46ef9053e9', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/orchestrator_agent.py', 'line': 153, 'function': 'handle', 'agent_name': 'OrchestratorAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'selected_agent.handle'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_agent'}, content_type='application/json'))
+        except Exception:
+            pass
         response = await selected_agent.handle(forwarded_context)
         response["orchestrator"] = self.AGENT_NAME
         response["routing_note"] = routing_note
         # LINEAJE: enforce() `response` at agent->user_interface data_egress — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:728d0c5aa3c4919ecd2548d7268f00f18efd85878270cc125539b0b1d7a5762b'
         _gr_client = _lineaje_load_gr_client()
         _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:728d0c5aa3c4919ecd2548d7268f00f18efd85878270cc125539b0b1d7a5762b', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/agents/orchestrator_agent.py', 'line': 20, 'name': 'OrchestratorAgent'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'OrchestratorAgent', 'version': '1.0.0', 'purl': 'pkg:aiagent/OrchestratorAgent@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/orchestrator_agent.py', 'line': 84, 'function': 'OrchestratorAgent.handle'}})
+        try:
+            # LINEAJE: enforce() `_gr_site` at agent->user_interface data_egress — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:6abc5bf0d015ba5366c5c5e7bd862b9fac44785949737daecd0b8f228fff962f'
+            _gr_client = _lineaje_load_gr_client()
+            _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:6abc5bf0d015ba5366c5c5e7bd862b9fac44785949737daecd0b8f228fff962f', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/agents/orchestrator_agent.py', 'line': 53, 'name': 'OrchestratorAgent'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'OrchestratorAgent', 'version': '1.0.0', 'purl': 'pkg:aiagent/OrchestratorAgent@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/orchestrator_agent.py', 'line': 160, 'function': 'OrchestratorAgent.handle'}})
+            try:
+                _gr_site = _gr_client.enforce(_gr_site, _gr_site, content_type='text/plain')
+            except _gr_client.GuardrailUnavailableError:
+                pass
+            except PermissionError:
+                pass
+            response = _gr_client.enforce(_gr_site, response, content_type='text/plain')
+        except _gr_client.GuardrailUnavailableError:
+            pass
+        except PermissionError:
+            pass
+        # LINEAJE: enforce() `response` at agent->user_interface data_egress — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:70eb737fb23017e705f9b705851ad35de832a5f8d5141bbeb3e044f5c50eec8f'
+        _gr_client = _lineaje_load_gr_client()
+        _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:70eb737fb23017e705f9b705851ad35de832a5f8d5141bbeb3e044f5c50eec8f', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/agents/orchestrator_agent.py', 'line': 53, 'name': 'OrchestratorAgent'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'OrchestratorAgent', 'version': '1.0.0', 'purl': 'pkg:aiagent/OrchestratorAgent@1.0.0'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/agents/orchestrator_agent.py', 'line': 165, 'function': 'OrchestratorAgent.handle'}})
         try:
             response = _gr_client.enforce(_gr_site, response, content_type='text/plain')
         except _gr_client.GuardrailUnavailableError:
