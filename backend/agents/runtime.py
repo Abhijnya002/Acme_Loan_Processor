@@ -31,8 +31,6 @@ def _lineaje_current_model():
         for _key in _keys:
             if _values.get(_key): return _values[_key]
     return next((_o.environ[_key].strip() for _key in _keys if _o.environ.get(_key, "").strip()), "")
-
-
 from copy import deepcopy
 from typing import Any
 
@@ -72,6 +70,12 @@ async def handle_chat_request(context: dict[str, Any]) -> dict[str, Any]:
     try:
         _lineaje_obs = _lineaje_load_gr_client()
         _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:a8f992226808466d81c219c43dd4b1aef0b7de8c92d918849c3bb082b2b4ba18', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/runtime.py', 'line': 39, 'function': 'handle_chat_request', 'agent_name': 'handle_chat_request', 'agent_name_source': 'inferred_from_function', 'call_target': 'orchestrator_agent.handle'}, observe_only=True)
+        await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_agent'}, content_type='application/json'))
+    except Exception:
+        pass
+    try:
+        _lineaje_obs = _lineaje_load_gr_client()
+        _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:e2e42e5a1c53fdc81d5a3c19996782494b8b1a64a8845be1fe529e5f8df1bcde', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/runtime.py', 'line': 78, 'function': 'handle_chat_request', 'agent_name': 'handle_chat_request', 'agent_name_source': 'inferred_from_function', 'call_target': 'orchestrator_agent.handle'}, observe_only=True)
         await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_agent'}, content_type='application/json'))
     except Exception:
         pass
