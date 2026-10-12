@@ -46,8 +46,6 @@ def _lineaje_current_model():
         for _key in _keys:
             if _values.get(_key): return _values[_key]
     return next((_o.environ[_key].strip() for _key in _keys if _o.environ.get(_key, "").strip()), "")
-
-
 import logging
 import re
 from typing import Optional
@@ -103,6 +101,12 @@ class ContentScanner:
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'rag_ingest'}, content_type='application/json'))
         except Exception:
             pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:68f2fcbc1bfd13578ed1fe25810b9faebf51c6fd37a6a5ec0471d818b245b385', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='rag_source', destination_type='rag_pipeline', project='lineaje-openclaw', organization='', components={'file': 'backend/policies/content_scanner.py', 'line': 106, 'function': 'scan_html', 'agent_name': 'ContentScanner', 'agent_name_source': 'inferred_from_class', 'call_target': 'soup.get_text'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'rag_ingest'}, content_type='application/json'))
+        except Exception:
+            pass
         visible_text = soup.get_text(separator='\n', strip=True)
 
         # Extract hidden content (CSS hidden elements)
@@ -124,6 +128,12 @@ class ContentScanner:
                     await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'rag_ingest'}, content_type='application/json'))
                 except Exception:
                     pass
+                try:
+                    _lineaje_obs = _lineaje_load_gr_client()
+                    _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:154768e121cb995b40e01d47a92bcd931df95c2173af42d6afc566fe055f9e2b', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='rag_source', destination_type='rag_pipeline', project='lineaje-openclaw', organization='', components={'file': 'backend/policies/content_scanner.py', 'line': 127, 'function': 'scan_html', 'agent_name': 'ContentScanner', 'agent_name_source': 'inferred_from_class', 'call_target': 'element.get_text'}, observe_only=True)
+                    await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'rag_ingest'}, content_type='application/json'))
+                except Exception:
+                    pass
                 text = element.get_text(strip=True)
                 if text:
                     hidden_elements.append(text)
@@ -139,6 +149,12 @@ class ContentScanner:
                 await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'rag_ingest'}, content_type='application/json'))
             except Exception:
                 pass
+            try:
+                _lineaje_obs = _lineaje_load_gr_client()
+                _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:cc2a406e45692935a3a28d5f2caa722d6b8352c4e42bb538a62b4a76bd1692d5', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='rag_source', destination_type='rag_pipeline', project='lineaje-openclaw', organization='', components={'file': 'backend/policies/content_scanner.py', 'line': 142, 'function': 'scan_html', 'agent_name': 'ContentScanner', 'agent_name_source': 'inferred_from_class', 'call_target': 'element.get_text'}, observe_only=True)
+                await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'rag_ingest'}, content_type='application/json'))
+            except Exception:
+                pass
             text = element.get_text(strip=True)
             if text:
                 hidden_elements.append(text)
@@ -151,6 +167,15 @@ class ContentScanner:
         # LINEAJE: enforce() `_lineaje_payload` at agent->log log_emit — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:d2a0643405bb248eb1c94626be2412aa4560ec57797ceb3b6506ef7ba607cc1c'
         _gr_client = _lineaje_load_gr_client()
         _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:d2a0643405bb248eb1c94626be2412aa4560ec57797ceb3b6506ef7ba607cc1c', phase='log_emit', boundary={'source': 'log', 'sink': 'log'}, candidate_policies=[{'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='log', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/policies/content_scanner.py', 'line': 99, 'function': 'ContentScanner.scan_html'}})
+        try:
+            _lineaje_payload = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_payload, content_type='application/json'))
+        except _gr_client.GuardrailUnavailableError:
+            pass
+        except PermissionError:
+            pass
+        # LINEAJE: enforce() `_lineaje_payload` at agent->log log_emit — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:b88d68139db3b59055ce8f4e204f38e0be62299cf4bbe2a3f17436ff6dd37d84'
+        _gr_client = _lineaje_load_gr_client()
+        _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:b88d68139db3b59055ce8f4e204f38e0be62299cf4bbe2a3f17436ff6dd37d84', phase='log_emit', boundary={'source': 'log', 'sink': 'log'}, candidate_policies=[{'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='log', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/policies/content_scanner.py', 'line': 160, 'function': 'ContentScanner.scan_html'}})
         try:
             _lineaje_payload = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_payload, content_type='application/json'))
         except _gr_client.GuardrailUnavailableError:
@@ -291,6 +316,12 @@ class ContentScanner:
                     await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'rag_ingest'}, content_type='application/json'))
                 except Exception:
                     pass
+                try:
+                    _lineaje_obs = _lineaje_load_gr_client()
+                    _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:938d31ab5589dee956c915bcf319e5770b5b1a9675f9d2905e197ddd25892e6b', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='rag_source', destination_type='rag_pipeline', project='lineaje-openclaw', organization='', components={'file': 'backend/policies/content_scanner.py', 'line': 294, 'function': 'extract_base64_content', 'agent_name': 'ContentScanner', 'agent_name_source': 'inferred_from_class', 'call_target': 'b64.b64decode(match).decode'}, observe_only=True)
+                    await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'rag_ingest'}, content_type='application/json'))
+                except Exception:
+                    pass
                 decoded = b64.b64decode(match).decode('utf-8', errors='ignore')
                 if decoded and len(decoded) > 10:  # Filter noise
                     decoded_contents.append(decoded)
@@ -321,6 +352,15 @@ class ContentScanner:
         _gr_client = _lineaje_load_gr_client()
         _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:33ed9c61df8e9b7d1fa3d47b43293c78edc4bdcb87869f728033fa21dc12ca85', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/policies/content_scanner.py', 'line': 223, 'function': 'ContentScanner.extract_base64_content'}})
         try:
+            # LINEAJE: enforce() `_gr_site` at agent->user_interface data_egress — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:d63de809c091730d4e1a55a6ee66c44cc9656c00839d8e5bc71709795dd1a860'
+            _gr_client = _lineaje_load_gr_client()
+            _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:d63de809c091730d4e1a55a6ee66c44cc9656c00839d8e5bc71709795dd1a860', phase='data_egress', boundary={'source': 'agent_message', 'sink': 'user_interface'}, candidate_policies=[{'policy_id': 'AI_DAT_SEC_012', 'policy_name': 'Mask PII on user interfaces', 'guardrail_id': 'Mask PII on UI', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='BLOCK', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/policies/content_scanner.py', 'line': 324, 'function': 'ContentScanner.extract_base64_content'}})
+            try:
+                _gr_site = _gr_client.enforce(_gr_site, _gr_site, content_type='text/plain')
+            except _gr_client.GuardrailUnavailableError:
+                pass
+            except PermissionError:
+                pass
             decoded_contents = _gr_client.enforce(_gr_site, decoded_contents, content_type='text/plain')
         except _gr_client.GuardrailUnavailableError:
             pass
@@ -345,9 +385,21 @@ class ContentScanner:
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
         except Exception:
             pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:3b6014870eda242bb1e337eb140eb55be3c30f08c36fa824c186a8f753eb5491', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/policies/content_scanner.py', 'line': 348, 'function': 'combine_for_analysis', 'agent_name': 'ContentScanner', 'agent_name_source': 'inferred_from_class'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+        except Exception:
+            pass
         parts = [extracted.visible_text]
 
         # VULNERABILITY: Hidden content added without filtering
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:7ec053c74cd1f77acf75f32ec76fe950ef09349dc5f4b804c507bffd6ff36c13', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/policies/content_scanner.py', 'line': 353, 'function': 'combine_for_analysis', 'agent_name': 'ContentScanner', 'agent_name_source': 'inferred_from_class'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+        except Exception:
+            pass
         if extracted.hidden_text:
             _lineaje_payload = f"\n[Additional content]:\n{extracted.hidden_text}"
             # LINEAJE: enforce() `_lineaje_payload` at agent->llm pre_model — this payload crossed a trust boundary with no runtime policy check. Mask/block; do not remove without review. site_id='site:sha256:4892d95c3544e6ee1042a40e1ea00e73d80b3b84d0c8bd03579808187fcd149b'
