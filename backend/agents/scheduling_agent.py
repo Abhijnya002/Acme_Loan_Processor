@@ -31,8 +31,6 @@ def _lineaje_current_model():
         for _key in _keys:
             if _values.get(_key): return _values[_key]
     return next((_o.environ[_key].strip() for _key in _keys if _o.environ.get(_key, "").strip()), "")
-
-
 import asyncio
 from typing import Any
 
@@ -61,6 +59,12 @@ class SchedulingAgent(AcmeLoanAgentFramework):
         try:
             _lineaje_obs = _lineaje_load_gr_client()
             _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:eed66eff80c940c035d068c85a1ffd1eba73597999b40f82563407ddbff05c3d', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/scheduling_agent.py', 'line': 28, 'function': 'call_agent_model', 'agent_name': 'SchedulingAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.call_bedrock_model'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+        except Exception:
+            pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:d36cc9d15cee94a6ae5d30d382ac144f7372a9524728d5daacdb55402d2ca077', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/scheduling_agent.py', 'line': 67, 'function': 'call_agent_model', 'agent_name': 'SchedulingAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'self.call_bedrock_model'}, observe_only=True)
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
         except Exception:
             pass
@@ -108,6 +112,12 @@ class SchedulingAgent(AcmeLoanAgentFramework):
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'mcp_call'}, content_type='application/json'))
         except Exception:
             pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:9de67ca36623bb94f8b27e6f50b0660c3661844b4b1044800fbe33d2321da5bc', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='tool', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/scheduling_agent.py', 'line': 112, 'function': 'handle', 'agent_name': 'SchedulingAgent', 'agent_name_source': 'inferred_from_class', 'call_target': 'call_mcp_server', 'tool_protocol': 'local', 'tool_protocol_source': 'scan: no MCP client imported'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'mcp_call'}, content_type='application/json'))
+        except Exception:
+            pass
         mcp_activity = await asyncio.gather(
             call_mcp_server(
                 self.to_dict(),
@@ -150,6 +160,12 @@ class SchedulingAgent(AcmeLoanAgentFramework):
         try:
             _lineaje_obs = _lineaje_load_gr_client()
             _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:c810ef33ade5796289700f11ae51652789f0809deeed0ed778d67b6d6eb95bfa', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/scheduling_agent.py', 'line': 88, 'function': 'handle', 'agent_name': 'SchedulingAgent', 'agent_name_source': 'inferred_from_class', 'site_kind': 'return'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json'))
+        except Exception:
+            pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:a79a8389c2a4e42ccffc064d89e57b9e0bebaf8c3ee3dc35fc2c4d666cf2a72d', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='user_interface', project='lineaje-openclaw', organization='', components={'file': 'backend/agents/scheduling_agent.py', 'line': 156, 'function': 'handle', 'agent_name': 'SchedulingAgent', 'agent_name_source': 'inferred_from_class', 'site_kind': 'return'}, observe_only=True)
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_ui'}, content_type='application/json'))
         except Exception:
             pass
