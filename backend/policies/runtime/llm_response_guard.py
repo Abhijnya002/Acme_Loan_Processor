@@ -41,8 +41,6 @@ def _lineaje_current_model():
         for _key in _keys:
             if _values.get(_key): return _values[_key]
     return next((_o.environ[_key].strip() for _key in _keys if _o.environ.get(_key, "").strip()), "")
-
-
 import logging
 from dataclasses import dataclass
 from typing import Optional
@@ -89,6 +87,12 @@ class LLMResponseGuard:
         _gr_client = _lineaje_load_gr_client()
         _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:8c54777e712fd6ac633495f767a50dac14ab3e6ab38467ea2c73f947ed5d2e44', phase='log_emit', boundary={'source': 'log', 'sink': 'log'}, candidate_policies=[{'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'Emit Agent Activity via OpenTelemetry', 'guardrail_id': None, 'policy_version': None}], fail_mode='ALLOW_WITH_AUDIT', source_type='agent', destination_type='log', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='main', project_branch='main', components={'identity': {'app': {'name': 'acme_loan_processor', 'version': 'main', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@main?commit-id=9a89a1a82e8e0f3dcc2361c3aa7f52da6e71cb57&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/policies/runtime/llm_response_guard.py', 'line': 54, 'function': 'LLMResponseGuard.validate'}})
         try:
+            try:
+                _lineaje_obs = _lineaje_load_gr_client()
+                _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:6b23ebf0bb7605de560b5bb8bc133e457e53b757266046b031b4ae607a7d4b07', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='tool', project='lineaje-openclaw', organization='', components={'file': 'backend/policies/runtime/llm_response_guard.py', 'line': 92, 'function': 'validate', 'agent_name': 'LLMResponseGuard', 'agent_name_source': 'inferred_from_class', 'call_target': '_gr_client.enforce', 'tool_protocol': 'local', 'tool_protocol_source': 'scan: no MCP client imported'}, observe_only=True)
+                await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'mcp_call'}, content_type='application/json'))
+            except Exception:
+                pass
             _lineaje_payload = await __import__('asyncio').to_thread(lambda: _gr_client.enforce(_gr_site, _lineaje_payload, content_type='application/json'))
         except _gr_client.GuardrailUnavailableError:
             pass
