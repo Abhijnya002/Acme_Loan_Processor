@@ -37,8 +37,6 @@ def _lineaje_current_model():
         for _key in _keys:
             if _values.get(_key): return _values[_key]
     return next((_o.environ[_key].strip() for _key in _keys if _o.environ.get(_key, "").strip()), "")
-
-
 import base64
 import json
 from datetime import datetime, timezone
@@ -202,6 +200,12 @@ async def chat(request: ChatRequest):
                     }
                 )
 
+                try:
+                    _lineaje_obs = _lineaje_load_gr_client()
+                    _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:468f611b61c5564912f7b6595cc97ddc03c91a9161017edfc0e98e6c5c23f745', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/main.py', 'line': 205, 'function': 'chat', 'agent_name': 'chat', 'agent_name_source': 'inferred_from_function'}, observe_only=True)
+                    await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+                except Exception:
+                    pass
                 _lineaje_content = attachment.content
                 # LINEAJE: enforce() `_lineaje_content` at file_storage->agent file_upload — scan flagged AI_APP_SEC_001 (Do not allow malicious content via hidden prompts). Mask/block; do not remove without review. site_id='site:sha256:c9c2ffa92f987dc9a96bb9d56ceae4dd67f819cce7ff9202eca589b42d7cf2fc'
                 _gr_client = _lineaje_load_gr_client()
@@ -225,6 +229,12 @@ async def chat(request: ChatRequest):
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'ui_to_agent'}, content_type='application/json'))
         except Exception:
             pass
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:fc19f14f98b33bb11ef1305382b1fe6547433bd3abf5ad290cb9f3e8d4e4b627', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/main.py', 'line': 229, 'function': 'chat', 'agent_name': 'chat', 'agent_name_source': 'inferred_from_function'}, observe_only=True)
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
+        except Exception:
+            pass
         context = {
             "user_message": request.message,
             "file_contents": file_contents,
@@ -237,7 +247,22 @@ async def chat(request: ChatRequest):
             await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_agent'}, content_type='application/json'))
         except Exception:
             pass
+        # LINEAJE: enforce() `context` at agent->llm pre_model — scan flagged AI_APP_SEC_070 (Detect and block all forms of prompt injection attacks in user inputs and file contents); AI_DAT_SEC_012 (Mask PII on user interfaces). Mask/block; do not remove without review. site_id='site:sha256:b3ca7de3443a5b505ea54c1d845852bfd92ca852c914d092dcdcc63d218ede5c'
+        _gr_client = _lineaje_load_gr_client()
+        _gr_site = _gr_client.SiteDescriptor(site_id='site:sha256:b3ca7de3443a5b505ea54c1d845852bfd92ca852c914d092dcdcc63d218ede5c', phase='pre_model', boundary={'source': 'agent_message', 'sink': 'model'}, candidate_policies=[{'policy_id': 'AI_APP_SEC_006', 'policy_name': "Use only LLMs from the organization's approved list.", 'guardrail_id': 'Enforce Approved LLM.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_038', 'policy_name': 'The AI Model must validate and sanitize any input before processing.', 'guardrail_id': 'Sanitize LLM Input', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_067', 'policy_name': 'Detect direct string interpolation of untrusted input into LLM prompts', 'guardrail_id': 'Enforce structural separation of untrusted input from LLM prompt templates', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_001', 'policy_name': 'Do not allow malicious content via hidden prompts', 'guardrail_id': 'Replace suspicious prompt', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_039', 'policy_name': 'Sanitize and validate all input to the AI Model.', 'guardrail_id': 'Sanitize LLM input', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_080', 'policy_name': 'Do not allow refusal-triggering language in LLM driven analysis pipeline', 'guardrail_id': 'Replace refusal-triggering language in untrusted content', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_032', 'policy_name': 'Do not allow malicious content via hidden prompts written in leetspeak.', 'guardrail_id': 'Remove prompts in leetspeak', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_028', 'policy_name': "Do not use LLMs from the organization's disallowed list", 'guardrail_id': 'Enforce Approved LLM', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_059', 'policy_name': 'Do not allow prompts that can execute malicious commands at runtime.', 'guardrail_id': 'Block runtime command execution prompts.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_002', 'policy_name': 'Do not allow malicious content via encoded prompts', 'guardrail_id': 'Replace suspicious prompt.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_070', 'policy_name': 'Detect and block all forms of prompt injection attacks in user inputs and file contents', 'guardrail_id': 'Neutralize all detected prompt injection payloads', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_DAT_SEC_011', 'policy_name': 'Do not send PII and/or secrets to AI Models', 'guardrail_id': 'Redact PII', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_APP_SEC_071', 'policy_name': 'Enforce chemical, biological, radiological, or nuclear (CBRN) threat prevention safeguards in AI-enabled systems', 'guardrail_id': 'Add CBRN screening and biological data safeguards.', 'policy_version': '2026.08.1'}, {'policy_id': 'AI_AGENT_ACTIVITY_LOG', 'policy_name': 'AI agent activity must be logged via OpenTelemetry.', 'guardrail_id': 'Emit Agent Activity via OpenTelemetry (single prompt)', 'policy_version': '2026.08.1'}], fail_mode='BLOCK', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='Enterprise', project_name='acme_loan_processor', project_version='local-run', project_branch='local-run', components={'source': {'entity_type': 'agent', 'unique_org_id': 'vdna_1bOIDPqj97q6mzc6', 'repository_uri': 'https://github.com/abhijnya002/acme_loan_processor', 'file_path': 'backend/main.py', 'line': 442, 'name': 'Google'}, 'identity': {'source': {'entity_type': 'aiagent', 'name': 'Google', 'version': 'calendar', 'purl': 'pkg:aiagent/Google@calendar'}, 'app': {'name': 'acme_loan_processor', 'version': 'local-run', 'purl': 'pkg:github/abhijnya002/acme_loan_processor@local-run?commit-id=a9ad1bb4e72b5adfd0085522ce8623710221f948&commit-time=&build_file=frontend/package.json&repo_strategy=single-repo'}}, 'invocation': {'file': 'backend/main.py', 'line': 240, 'function': 'chat'}})
+        try:
+            context = _gr_client.enforce(_gr_site, context, content_type='application/json', variable_name='context', source_file=__file__, before_line=240)
+        except _gr_client.GuardrailUnavailableError:
+            pass
+        except PermissionError:
+            raise
         response = await handle_chat_request(context)
+        try:
+            _lineaje_obs = _lineaje_load_gr_client()
+            _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:399613dfda510cb46464f72af0ad6bb170bdbe39bf7ccaae360e0552c3186102', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='llm', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/main.py', 'line': 240, 'function': 'chat', 'agent_name': 'chat', 'agent_name_source': 'inferred_from_function', 'call_target': 'handle_chat_request'}, observe_only=True, interaction_id=locals().get('_lineaje_interaction_id'))
+            await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'llm_to_agent'}, content_type='application/json'))
+        except Exception:
+            pass
 
         skill_invocation = response.get("skill_invocation")
         workflow_stages = response.get("workflow_stages")
@@ -310,6 +335,12 @@ async def upload_file(file: UploadFile = File(...)):
         _lineaje_obs = _lineaje_load_gr_client()
         _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:82d2bc9b745dec103569a43783c23f15f3f1c65508aaf4a07d82bd5a877f1d67', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='user_interface', destination_type='agent', project='lineaje-openclaw', organization='', components={'file': 'backend/main.py', 'line': 208, 'function': 'upload_file', 'agent_name': 'upload_file', 'agent_name_source': 'inferred_from_function', 'call_target': 'file.read'}, observe_only=True)
         await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'ui_to_agent'}, content_type='application/json'))
+    except Exception:
+        pass
+    try:
+        _lineaje_obs = _lineaje_load_gr_client()
+        _lineaje_obs_site = _lineaje_obs.SiteDescriptor(site_id='site:sha256:22047853ab958292c37b530514bb218ffd69000233da0dd63287db154076e9a3', phase='', boundary={}, candidate_policies=['AI_AGENT_ACTIVITY_LOG'], fail_mode='ALLOW', source_type='agent', destination_type='llm', project='lineaje-openclaw', organization='', components={'file': 'backend/main.py', 'line': 315, 'function': 'upload_file', 'agent_name': 'upload_file', 'agent_name_source': 'inferred_from_function', 'call_target': 'file.read'}, observe_only=True)
+        await __import__('asyncio').to_thread(lambda: _lineaje_obs.enforce(_lineaje_obs_site, {'activity': 'agent_to_llm'}, content_type='application/json'))
     except Exception:
         pass
     content = await file.read()
